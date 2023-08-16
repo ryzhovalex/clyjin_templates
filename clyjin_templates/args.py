@@ -1,4 +1,4 @@
-from clyjin.base.moduleargs import ModuleArgs, ModuleArg
+from clyjin.base.moduleargs import ModuleArg, ModuleArgs
 
 
 class TemplatesArgs(ModuleArgs):
