@@ -35,13 +35,13 @@ files = [
 
 [[package]]
 name = "clyjin"
-version = "0.2.4"
+version = "0.2.9"
 description = "Modular toolbox"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "clyjin-0.2.4-py3-none-any.whl", hash = "sha256:81200558a0aab87f6a986df9dc44bf12131a9e5547bf6b3e85d2abb88e29be86"},
-    {file = "clyjin-0.2.4.tar.gz", hash = "sha256:bd6ca0e92b5bbf119a16d91dd0ef50f9f888efaaa7eee0c08980de273e5aa5da"},
+    {file = "clyjin-0.2.9-py3-none-any.whl", hash = "sha256:8ce64d738b5b3fb155c0d902c771921c9ce4ffe30464184d16c56031948a1dd1"},
+    {file = "clyjin-0.2.9.tar.gz", hash = "sha256:0d5e4051b7108174fcea3f294c36705197c168e8e1d35b8778cbdbb01f85d45e"},
 ]
 
 [package.dependencies]
@@ -529,4 +529,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "3bfa020aaefff74137a38507c653cf044f5045f8023efe178fbd6ae98a840df5"
+content-hash = "fb1daf54615f5a513286c74f8470200f82647da6d643adee9c9fc57fcadc842a"

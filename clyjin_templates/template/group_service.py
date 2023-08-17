@@ -3,7 +3,7 @@ import shutil
 import aiofiles
 from pathlib import Path
 
-from antievil import NotFoundError
+from antievil import NotFoundError, DuplicateNameError
 from clyjin.log import Log
 from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
 
@@ -56,7 +56,8 @@ class TemplateGroupService(Service):
         self._softcheck_group_dir(dir)
         final_name: str = \
             dir.name if name is None else name
-        self._check_name(final_name)
+        self._check_name_correctness(final_name)
+        self._check_name_existence(final_name)
 
         Log.info(
             f"[clyjin_templates] adding template <{final_name}>"
@@ -74,14 +75,14 @@ class TemplateGroupService(Service):
         )
 
         # do regular 1-to-1 copying
-        shutil.copy(
+        shutil.copytree(
             dir,
             destination_dir
         )
 
         await self._load(final_name)
 
-    def _check_name(self, name: str) -> None:
+    def _check_name_correctness(self, name: str) -> None:
         """
         Checks group name for correctness.
         """
@@ -89,6 +90,16 @@ class TemplateGroupService(Service):
             raise IncorrectTemplateGroupNameError(name, "empty")
         elif not name.isalnum():
             raise IncorrectTemplateGroupNameError(name, "not alpha-numeric")
+
+    def _check_name_existence(self, name: str) -> None:
+        """
+        Checks group name for existence in storage.
+        """
+        if name in self._group_by_name:
+            raise DuplicateNameError(
+                title="template group name",
+                name=name
+            )
 
     def _softcheck_group_dir(self, group_dir: Path) -> None:
         """

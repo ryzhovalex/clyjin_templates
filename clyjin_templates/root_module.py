@@ -3,6 +3,7 @@ from pathlib import Path
 from clyjin.base import Config, Module, ModuleArg
 from clyjin.base.moduledata import ModuleData
 from clyjin.log import Log
+from antievil import UnsetValueError
 
 from clyjin_templates.args import TemplatesArgs
 from clyjin_templates.template.filemaker.maker import FileMaker
@@ -59,7 +60,7 @@ class RootModule(Module[TemplatesArgs, Config]):
         )
 
     def _get_target_dir(self) -> Path:
-        return \
-            self.args.target_dir \
-            if self.args.target_dir is not None \
-            else self._rootdir
+        try:
+            return self.args.target_dir.value
+        except UnsetValueError:
+            return self._rootdir

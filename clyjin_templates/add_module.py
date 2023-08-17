@@ -2,6 +2,7 @@ from pathlib import Path
 
 from clyjin.base import Config, Module, ModuleArg
 from clyjin.base.moduledata import ModuleData
+from antievil import UnsetValueError
 from clyjin.log import Log
 
 from clyjin_templates.args import AddArgs, TemplatesArgs
@@ -51,4 +52,7 @@ class AddModule(Module[AddArgs, Config]):
         )
 
     def _get_name(self) -> str | None:
-        return self.args.template_group_name.value
+        try:
+            return self.args.template_group_name.value
+        except UnsetValueError:
+            return None
