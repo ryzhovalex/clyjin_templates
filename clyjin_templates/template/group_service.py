@@ -1,13 +1,16 @@
+import asyncio
 import os
 import shutil
+from typing import Coroutine
 import aiofiles
 from pathlib import Path
 
-from antievil import NotFoundError, DuplicateNameError
+from antievil import NotFoundError, DuplicateNameError, DirectoryExpectedError
 from clyjin.log import Log
 from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
+from clyjin_templates.template.specparser import TemplateGroupSpecParser
 
-from clyjin_templates.template.templategroup import TemplateGroup
+from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.utils.service import Service
 
 
@@ -40,7 +43,9 @@ class TemplateGroupService(Service):
     async def add(
         self,
         dir: Path,
-        name: str | None = None
+        *,
+        name: str | None = None,
+        is_update: bool = False
     ) -> None:
         """
         Adds a new template group to the storage.
@@ -57,7 +62,8 @@ class TemplateGroupService(Service):
         final_name: str = \
             dir.name if name is None else name
         self._check_name_correctness(final_name)
-        self._check_name_existence(final_name)
+        if not is_update:
+            self._check_name_existence(final_name)
 
         Log.info(
             f"[clyjin_templates] adding template <{final_name}>"
@@ -77,10 +83,39 @@ class TemplateGroupService(Service):
         # do regular 1-to-1 copying
         shutil.copytree(
             dir,
-            destination_dir
+            destination_dir,
+            dirs_exist_ok=is_update
         )
 
         await self._load(final_name)
+
+    async def preload(self) -> None:
+        """
+        Loads saved groups into memory.
+        """
+        loading_coros: list[Coroutine[None, None, None]] = []
+
+        for _, dirnames, _ in os.walk(self._groups_dir):
+            for dirname in dirnames:
+                loading_coros.append(self._load(dirname))
+
+        await asyncio.gather(*loading_coros)
+
+    async def _load(self, name: str) -> None:
+        """
+        Loads template groups from storage into main memory.
+        """
+        group_dir: Path = Path(
+            self._groups_dir,
+            name
+        )
+        self._softcheck_group_dir(group_dir)
+
+        spec_path: Path = Path(
+            group_dir,
+            "spec.yml"
+        )
+        self._group_by_name[name] = TemplateGroupSpecParser().parse(spec_path)
 
     def _check_name_correctness(self, name: str) -> None:
         """
@@ -111,23 +146,10 @@ class TemplateGroupService(Service):
         Maybe in future the initial check will be performed outputting the
         template to some temporary directory for test purposes.
         """
-        if not Path(group_dir, "spec.yml").is_file():
+        if not group_dir.is_dir():
+            raise DirectoryExpectedError(path=group_dir)
+        elif not Path(group_dir, "spec.yml").is_file():
             raise NotFoundError(
                 title="spec file for template group dir",
                 value=group_dir
             )
-
-    async def preload(self) -> None:
-        """
-        Loads saved groups into memory.
-        """
-        # for root, dirnames, _ in os.walk(self._groups_dir):
-        for root, dirnames, _ in os.walk(
-            Path(self._root_dir, self._groups_dir)
-        ):
-            print(dirnames)
-
-    async def _load(self, name: str) -> None:
-        """
-        Loads template groups from storage into main memory.
-        """

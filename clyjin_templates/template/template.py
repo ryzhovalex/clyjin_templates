@@ -1,13 +1,8 @@
 from pathlib import Path
 from clyjin.base import Model
 
-from clyjin_templates.template.templatesource import TemplateSource
+from clyjin_templates.template.source import TemplateSource
 from clyjin_templates.template.vars.scope import TemplateGroupVarScope, TemplateGroupVarSpecialScope
-
-RefTemplateName = str
-"""
-Reference variant of template name, prefixed with ampersand `&`.
-"""
 
 
 class Template(Model):

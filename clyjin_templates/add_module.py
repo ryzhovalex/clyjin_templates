@@ -7,7 +7,7 @@ from clyjin.log import Log
 
 from clyjin_templates.args import AddArgs, TemplatesArgs
 from clyjin_templates.template.group_service import TemplateGroupService
-from clyjin_templates.template.templategroup import TemplateGroup
+from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.utils.servicehub import ServiceHub
 
 
@@ -26,6 +26,15 @@ class AddModule(Module[AddArgs, Config]):
             help=
                 "name to assign for added template group."
                 " Dir's name is used by default."
+        ),
+        is_update=ModuleArg[bool](
+            names=["-u", "--update"],
+            action="store_true",
+            type=bool,
+            argparse_type=type,
+            help=
+                "if should overwrite existing group."
+                " By default will raise an error if an existing group occurs."
         )
     )
 
@@ -43,7 +52,8 @@ class AddModule(Module[AddArgs, Config]):
         name: str | None = self._get_name()
         await self._template_group_service.add(
             input_dir,
-            name=name
+            name=name,
+            is_update=self.args.is_update
         )
 
     def _initialize(self) -> None:

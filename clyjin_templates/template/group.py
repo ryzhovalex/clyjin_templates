@@ -24,6 +24,6 @@ class TemplateGroup(Model):
     """
     name: str
     tree: FileTreeNode
-    templates: dict[str, Template]
+    templates: dict[str, Template | None] | None = None
     description: str | None = None
     vars: TemplateGroupVars | None = None

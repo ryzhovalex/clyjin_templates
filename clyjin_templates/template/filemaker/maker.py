@@ -1,5 +1,5 @@
 from pathlib import Path
-from clyjin_templates.template.templategroup import TemplateGroup
+from clyjin_templates.template.group import TemplateGroup
 
 
 class FileMaker:
@@ -9,7 +9,7 @@ class FileMaker:
     def __init__(self) -> None:
         pass
 
-    def make(
+    async def make(
         self,
         template_group: TemplateGroup,
         target_dir: Path

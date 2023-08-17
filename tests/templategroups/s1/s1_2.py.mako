@@ -1,2 +1,2 @@
 def main():
-    print(${x}, ${y}, ${z})
+    print(${a}, ${b}, ${c})

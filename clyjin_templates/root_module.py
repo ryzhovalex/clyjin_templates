@@ -8,7 +8,7 @@ from antievil import UnsetValueError
 from clyjin_templates.args import TemplatesArgs
 from clyjin_templates.template.filemaker.maker import FileMaker
 from clyjin_templates.template.group_service import TemplateGroupService
-from clyjin_templates.template.templategroup import TemplateGroup
+from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.utils.servicehub import ServiceHub
 
 
@@ -52,7 +52,7 @@ class RootModule(Module[TemplatesArgs, Config]):
             template_group_name
         )
 
-        FileMaker().make(template_group, target_dir)
+        await FileMaker().make(template_group, target_dir)
 
     def _initialize(self) -> None:
         self._template_group_service = ServiceHub.ie().get(
