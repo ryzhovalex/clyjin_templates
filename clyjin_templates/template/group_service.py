@@ -1,3 +1,5 @@
+import os
+import aiofiles
 from pathlib import Path
 
 from antievil import NotFoundError
@@ -12,18 +14,18 @@ class TemplateGroupService(Service):
     """
     def __init__(
         self,
+        root_dir: Path,
         groups_dir: Path
     ) -> None:
+        self._root_dir: Path = root_dir
         self._groups_dir: Path = groups_dir
         self._is_loaded: bool = False
         self._group_by_name: dict[str, TemplateGroup] = {}
 
-    async def get(self, name: str) -> TemplateGroup:
+    def get(self, name: str) -> TemplateGroup:
         """
         Gets group by name.
         """
-        await self._lazyload()
-
         try:
             return self._group_by_name[name]
         except KeyError as error:
@@ -32,13 +34,10 @@ class TemplateGroupService(Service):
                 value=name
             ) from error
 
-    async def _lazyload(self) -> None:
+    async def load(self) -> None:
         """
-        Loads groups if not have been done.
+        Loads saved groups into memory.
         """
-        if self._is_loaded:
-            return
-
-
-
-        self._is_loaded = True
+        # for root, dirnames, _ in os.walk(self._groups_dir):
+        for root, dirnames, _ in os.walk(Path(self._root_dir, )):
+            print(dirnames)

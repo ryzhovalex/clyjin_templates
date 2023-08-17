@@ -1,6 +1,8 @@
+from pathlib import Path
 from clyjin_templates.template.group_service import TemplateGroupService
 from clyjin_templates.utils.service import Service
 from clyjin_templates.utils.servicehub import ServiceHub
+from clyjin.base import PluginInitializeData
 
 
 class Boot:
@@ -8,11 +10,26 @@ class Boot:
         TemplateGroupService
     ]
 
-    @classmethod
-    async def start(cls) -> None:
-        services: list[Service] = []
+    def __init__(self, data: PluginInitializeData) -> None:
+        self._data: PluginInitializeData = data
+        self._groups_dir = Path(
+            self._data.called_plugin_common_sysdir,
+            "templategroups"
+        )
 
-        for ServiceClass in cls._SERVICE_CLASSES:
-            services.append(ServiceClass())
+
+    async def start(self) -> None:
+        services: list[Service] = []
+        service: Service
+
+        for ServiceClass in self._SERVICE_CLASSES:
+            if ServiceClass is TemplateGroupService:
+                service = TemplateGroupService(
+                    root_dir=self._data.root_dir,
+                    groups_dir=self._groups_dir
+                )
+            else:
+                service = ServiceClass()
+            services.append(service)
 
         ServiceHub(services)
