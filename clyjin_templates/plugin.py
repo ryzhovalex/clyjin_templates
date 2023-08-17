@@ -1,8 +1,9 @@
 from clyjin.base import Plugin, PluginInitializeData
 
 from clyjin_templates._project import get_version
+from clyjin_templates.add_module import AddModule
 from clyjin_templates.boot import Boot
-from clyjin_templates.rootmodule import RootModule
+from clyjin_templates.root_module import RootModule
 from clyjin_templates.template.group_service import TemplateGroupService
 from clyjin_templates.utils.servicehub import ServiceHub
 
@@ -11,6 +12,7 @@ class TemplatesPlugin(Plugin):
     NAME = "template"
     MODULE_CLASSES = [
         RootModule,
+        AddModule
     ]
     VERSION = get_version()
 

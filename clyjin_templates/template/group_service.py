@@ -54,10 +54,14 @@ class TemplateGroupService(Service):
                 contain at least `spec.yml` file at the root level.
         """
         self._softcheck_group_dir(dir)
-
         final_name: str = \
             dir.name if name is None else name
         self._check_name(final_name)
+
+        Log.info(
+            f"[clyjin_templates] adding template <{final_name}>"
+            f" group from path <{dir}>"
+        )
 
         destination_dir: Path = Path(
             self._groups_dir,
