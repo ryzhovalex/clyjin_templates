@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from clyjin.base import Config, Module, ModuleArg
+from clyjin.base.moduledata import ModuleData
 from clyjin.log import Log
 from mako.template import Template
 
@@ -18,6 +19,14 @@ class RootModule(Module[TemplatesArgs, Config]):
         ),
     )
 
+    def __init__(
+        self,
+        module_data: ModuleData[TemplatesArgs, Config]
+    ) -> None:
+        super().__init__(module_data)
+
+        self._groups
+
     async def execute(self) -> None:
         template_name: str = self.args.template.value
         Log.info(
@@ -27,4 +36,4 @@ class RootModule(Module[TemplatesArgs, Config]):
         t = Template(
             filename=str(Path(self._rootdir, "tests", "test.py.mako")),
         )
-        Log.debug(t.render(x=2, y=3))
+        Log.debug(self._plugin_common_sysdir)

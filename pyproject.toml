@@ -11,7 +11,7 @@ include = [
 
 [tool.poetry.dependencies]
 python = "^3.11"
-clyjin = "^0.2.2"
+clyjin = "^0.2.3"
 mako = "^1.2.4"
 
 

@@ -1,0 +1,20 @@
+name: s1
+description: s1_description
+vars:
+    x: 1
+    y: "hello"
+    z: true
+templates:
+    s1_1.py:
+    s1_2.py:
+tree:
+    src:
+        __init__.py:
+            $content: "&s1_1.py"
+        drivers:
+            main.py:
+                $content: "&s1_2.py"
+        local:
+            $type: dir
+    README.md:
+        $content: "# s1_readme"
