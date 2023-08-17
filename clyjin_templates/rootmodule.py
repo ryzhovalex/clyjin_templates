@@ -27,16 +27,22 @@ class RootModule(Module[TemplatesArgs, Config]):
     ) -> None:
         super().__init__(module_data)
 
-        self._template_group_service: TemplateGroupService = \
-            ServiceHub.ie().get(TemplateGroupService)
+        self._template_group_service: TemplateGroupService
+
+    def _initialize(self) -> None:
+        self._template_group_service = ServiceHub.ie().get(
+            TemplateGroupService
+        )
 
     async def execute(self) -> None:
+        self._initialize()
+
         template_group_name: str = self.args.template_group.value
         Log.info(
             "[clyjin_templates] choosing template"
             f" group <{template_group_name}>"
         )
 
-        template_group: TemplateGroup = self._template_group_service.get(
-            template_group_name
-        )
+        # template_group: TemplateGroup = self._template_group_service.get(
+        #     template_group_name
+        # )

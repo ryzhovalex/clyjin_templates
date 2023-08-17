@@ -1,5 +1,4 @@
-from pathlib import Path
-from clyjin.base import Plugin, Module, PluginInitializeData
+from clyjin.base import Plugin, PluginInitializeData
 
 from clyjin_templates._project import get_version
 from clyjin_templates.boot import Boot
@@ -27,4 +26,4 @@ class TemplatesPlugin(Plugin):
         template_group_service: TemplateGroupService = service_hub.get(
             TemplateGroupService
         )
-        await template_group_service.load()
+        await template_group_service.preload()

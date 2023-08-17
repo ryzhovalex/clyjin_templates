@@ -1,11 +1,11 @@
 from pathlib import Path
 from clyjin.base import Model
-from pydantic import Field
+from pydantic import Field, RootModel
 from clyjin_templates.template.filetree.nodetype import NodeType
 from clyjin_templates.template.template import RefTemplateName
 
 
-class FileTreeNode(Model):
+class FileTreeNode(RootModel):
     """
     Describes filetree structure of a template group.
 
@@ -22,10 +22,18 @@ class FileTreeNode(Model):
             name, by prefixing needed template name with an ampersand `&`.
         nodes(optional):
             Children nodes by names. Should be None for file types. Defaults
-            to None.
+            to None. Are accessed under other arbitrary names.
+    """
+    root: dict[str, "FileTreeNode"] | None = None
+
+
+class FileTreeNodeInternal(Model):
+    """
+    Parsed internal version of
+    ${ref.clyjin_templates.template.filetree.node.FileTreeNode}.
     """
     type: NodeType = Field(alias="$type")
     content: Path | str | RefTemplateName | None = Field(
         default=None, alias="$content"
     )
-    __root__: dict[str, "FileTreeNode"] | None = None
+    nodes: dict[str, "FileTreeNode"] | None = None
