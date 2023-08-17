@@ -1,5 +1,5 @@
 from clyjin.base import Model
-from clyjin_templates.template.filetree.node import FileTreeNode
+from clyjin_templates.filetree.node import FileTreeNode
 from clyjin_templates.template.vars.vars import TemplateGroupVars
 
 from clyjin_templates.template.template import Template

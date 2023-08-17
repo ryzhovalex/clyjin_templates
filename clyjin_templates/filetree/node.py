@@ -1,8 +1,7 @@
 from pathlib import Path
 from clyjin.base import Model
 from pydantic import Field, RootModel
-from clyjin_templates.template.filetree.nodecontent import NodeContent
-from clyjin_templates.template.filetree.nodetype import NodeType
+from clyjin_templates.filetree.types import NodeContent, NodeFieldValue, NodeRoot, NodeType
 
 
 class FileTreeNode(RootModel):
@@ -24,18 +23,14 @@ class FileTreeNode(RootModel):
             Children nodes by names. Should be None for file types. Defaults
             to None. Are accessed under other arbitrary names.
     """
-    root: dict[
-        str, "FileTreeNode | NodeType | NodeContent | None"
-    ] | None = None
+    root: NodeRoot | None = None
 
 
 class FileTreeNodeInternal(Model):
     """
     Parsed internal version of
-    ${ref.clyjin_templates.template.filetree.node.FileTreeNode}.
+    ${ref.clyjin_templates.filetree.node.FileTreeNode}.
     """
-    type: NodeType = Field(alias="$type")
-    content: NodeContent = Field(
-        default=None, alias="$content"
-    )
+    type: NodeType
+    content: NodeContent | None = None
     nodes: dict[str, "FileTreeNode"] | None = None
