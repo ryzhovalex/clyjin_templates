@@ -1,6 +1,3 @@
-# version propagation files
-**/.version
-
 # Ignore test jupyter notebook file.
 test.ipynb
 

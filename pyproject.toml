@@ -5,9 +5,6 @@ description = "Creates files and directories using templates"
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
 readme = "README.md"
 packages = [{include = "clyjin_templates"}]
-include = [
-    "**/.version"
-]
 
 [tool.poetry.dependencies]
 python = "^3.11"
