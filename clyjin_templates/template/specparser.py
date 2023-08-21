@@ -2,7 +2,7 @@ from pathlib import Path
 from pprint import pprint
 from typing import Any
 
-from antievil import NonDirectoryExpectedError, ExpectedTypeError
+from antievil import FileExpectError, TypeExpectError
 
 from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.utils.yml import load_yml
@@ -23,7 +23,7 @@ class TemplateGroupSpecParser:
 
     def _check_spec_path(self, path: Path) -> None:
         if not path.is_file():
-            raise NonDirectoryExpectedError(path=path)
+            raise FileExpectError(path=path)
         elif path.name != "spec.yml":
             # TODO(ryzhovalex): replace with antievil.NameExpectError
             # 0

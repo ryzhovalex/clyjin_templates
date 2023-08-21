@@ -1,5 +1,5 @@
 from pathlib import Path
-from antievil import ExpectedTypeError, PleaseDefineError, UnsupportedError
+from antievil import TypeExpectError, PleaseDefineError, UnsupportedError
 from clyjin.log import Log
 from mako.template import Template as MakoTemplate
 from clyjin_templates.filetree.node import FileTreeNode, FileTreeNodeInternal
@@ -39,4 +39,5 @@ class FileMaker:
     async def _make_node(
         self,
         node: FileTreeNodeInternal
-    )
+    ) -> None:
+        pass

@@ -33,4 +33,4 @@ class FileTreeNodeInternal(Model):
     """
     type: NodeType
     content: NodeContent | None = None
-    nodes: dict[str, "FileTreeNode"] | None = None
+    nodes: dict[str, "FileTreeNodeInternal"] | None = None
