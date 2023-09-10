@@ -1,41 +1,41 @@
-from clyjin_templates.filesystem.models import FileTreeNodeInternal, NodeType
+from clyjin_templates.filesystem.models import FileNodeInternal, NodeType
 
 
-def test_s1(s1_root_node_internal: FileTreeNodeInternal):
-    node: FileTreeNodeInternal = s1_root_node_internal
+def test_s1_conversion(s1_root_node_internal: FileNodeInternal):
+    node: FileNodeInternal = s1_root_node_internal
 
-    expected_node: FileTreeNodeInternal = FileTreeNodeInternal(
+    expected_node: FileNodeInternal = FileNodeInternal(
         type=NodeType.Dir,
         content=None,
         nodes={
-            "src": FileTreeNodeInternal(
+            "src": FileNodeInternal(
                 type=NodeType.Dir,
                 content=None,
                 nodes={
-                    "__init__.py": FileTreeNodeInternal(
+                    "__init__.py": FileNodeInternal(
                         type=NodeType.File,
                         content="&s1_1.py",
                         nodes=None,
                     ),
-                    "drivers": FileTreeNodeInternal(
+                    "drivers": FileNodeInternal(
                         type=NodeType.Dir,
                         content=None,
                         nodes={
-                            "main.py": FileTreeNodeInternal(
+                            "main.py": FileNodeInternal(
                                 type=NodeType.File,
                                 content="&s1_2.py",
                                 nodes=None,
                             ),
                         },
                     ),
-                    "local": FileTreeNodeInternal(
+                    "local": FileNodeInternal(
                         type=NodeType.Dir,
                         content=None,
                         nodes=None,
                     ),
                 },
             ),
-            "README.md": FileTreeNodeInternal(
+            "README.md": FileNodeInternal(
                 type=NodeType.File,
                 content="# s1_readme",
             ),

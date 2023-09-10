@@ -3,8 +3,10 @@ from typing import TYPE_CHECKING
 
 from clyjin.log import Log
 
+from clyjin_templates.filesystem.utils import FileNodeConversionUtils
+
 if TYPE_CHECKING:
-    from clyjin_templates.filesystem.models import FileTreeNodeInternal
+    from clyjin_templates.filesystem.models import FileNodeInternal
     from clyjin_templates.template.group import TemplateGroup
 
 
@@ -35,9 +37,11 @@ class FileMaker:
             f" template <{template_group.name}>"
             f" in dir <{target_dir}>",
         )
+        internal_root_node: FileNodeInternal = \
+            FileNodeConversionUtils.convert_to_internal(template_group.tree)
 
     async def _make_node(
         self,
-        node: "FileTreeNodeInternal",
+        node: "FileNodeInternal",
     ) -> None:
         pass

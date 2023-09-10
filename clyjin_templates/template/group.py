@@ -1,6 +1,6 @@
 from clyjin.base import Model
 
-from clyjin_templates.filesystem.models import FileTreeNode
+from clyjin_templates.filesystem.models import FileNode
 from clyjin_templates.template.template import Template
 from clyjin_templates.template.vars.vars import TemplateGroupVars
 
@@ -23,7 +23,7 @@ class TemplateGroup(Model):
             Variables context of this group. Defaults to None.
     """
     name: str
-    tree: FileTreeNode
+    tree: FileNode
     templates: dict[str, Template | None] | None = None
     description: str | None = None
     vars: TemplateGroupVars | None = None

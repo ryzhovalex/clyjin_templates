@@ -28,7 +28,7 @@ class NodeType(Enum):
     Dir = "dir"
 
 
-class FileTreeNode(RootModel):
+class FileNode(RootModel):
     """
     Describes filetree structure of a template group.
 
@@ -51,15 +51,15 @@ class FileTreeNode(RootModel):
 
 
 NodeContent = Path | str | RefTemplateName
-NodeFieldValue = FileTreeNode | NodeType | NodeContent
+NodeFieldValue = FileNode | NodeType | NodeContent
 NodeRoot = dict[str, NodeFieldValue | None]
-class FileTreeNodeInternal(Model):
+class FileNodeInternal(Model):
     """
     Parsed internal version of
     ${ref.clyjin_templates.filetree.node.FileTreeNode}.
     """
     type: "NodeType"
     content: "NodeContent | None" = None
-    nodes: dict[str, "FileTreeNodeInternal"] | None = None
+    nodes: dict[str, "FileNodeInternal"] | None = None
 
-FileTreeNode.model_rebuild()
+FileNode.model_rebuild()

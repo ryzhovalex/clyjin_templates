@@ -7,51 +7,55 @@ from antievil import (
 )
 
 from clyjin_templates.filesystem.models import (
-    FileTreeNode,
-    FileTreeNodeInternal,
+    FileNode,
+    FileNodeInternal,
     NodeContent,
     NodeFieldValue,
     NodeRoot,
     NodeType,
 )
+from clyjin_templates.utils.klass import Static
 from clyjin_templates.utils.never import never
 
 
-class FileTreeNodeConverter:
+class FileNodeConversionUtils(Static):
     """
     Converts external FileTreeNodes to internal variants.
     """
-    def convert(
-        self,
-        node: FileTreeNode,
-    ) -> FileTreeNodeInternal:
+    @staticmethod
+    def convert_to_internal(
+        node: FileNode,
+    ) -> FileNodeInternal:
 
         root: NodeRoot | None = node.root
-        _type: NodeType | None = self._get_node_type(root)
+        _type: NodeType | None = FileNodeConversionUtils._get_node_type(root)
 
         content: NodeContent | None = None
         if root is not None:
-            content = self._get_node_content(
+            content = FileNodeConversionUtils._get_node_content(
                 root,
                 _type,
             )
 
-        nodes: dict[str, FileTreeNodeInternal] | None = self._convert_nodes(
-            node,
+        nodes: dict[str, FileNodeInternal] | None = \
+            FileNodeConversionUtils._convert_nodes(node)
+        final_type: NodeType = FileNodeConversionUtils._get_final_type(
+            _type,
+            content,
+            nodes
         )
-        final_type: NodeType = self._get_final_type(_type, content, nodes)
 
-        return FileTreeNodeInternal(
+        return FileNodeInternal(
             type=final_type,
             content=content,
             nodes=nodes,
         )
 
+    @staticmethod
     def _get_final_type(
-        self,
         pretype: NodeType | None,
         content: NodeContent | None,
-        nodes: dict[str, FileTreeNodeInternal] | None,
+        nodes: dict[str, FileNodeInternal] | None,
     ) -> NodeType:
         """
         Finds final type out of existing node parameters.
@@ -78,8 +82,8 @@ class FileTreeNodeConverter:
         errmsg: str = "not all branches are considered"
         raise LogicError(errmsg)
 
+    @staticmethod
     def _get_node_type(
-        self,
         root: NodeRoot | None,
     ) -> NodeType | None:
         if root is None:
@@ -104,8 +108,8 @@ class FileTreeNodeConverter:
             )
         return _type
 
+    @staticmethod
     def _get_node_content(
-        self,
         root: NodeRoot,
         _type: NodeType | None,
     ) -> NodeContent | None:
@@ -116,7 +120,7 @@ class FileTreeNodeConverter:
 
         match _type:
             case NodeType.File:
-                return self._get_file_node_content(content)
+                return FileNodeConversionUtils._get_file_node_content(content)
             case NodeType.Dir:
                 # content is not None and type is Dir => directories can't
                 # have content field
@@ -126,13 +130,13 @@ class FileTreeNodeConverter:
                 )
             case None:
                 # content is not None and type is None, assuming file
-                return self._get_file_node_content(content)
+                return FileNodeConversionUtils._get_file_node_content(content)
             case _:
                 never(_type)
                 return None
 
+    @staticmethod
     def _get_file_node_content(
-        self,
         maybe_content: NodeFieldValue,
     ) -> NodeContent:
         if not isinstance(maybe_content, (str, Path)):
@@ -148,17 +152,17 @@ class FileTreeNodeConverter:
 
         return maybe_content
 
+    @staticmethod
     def _convert_nodes(
-        self,
-        node: FileTreeNode,
-    ) -> dict[str, FileTreeNodeInternal] | None:
+        node: FileNode,
+    ) -> dict[str, FileNodeInternal] | None:
         if node.root is None:
             return None
 
-        result: dict[str, FileTreeNodeInternal] = {}
+        result: dict[str, FileNodeInternal] = {}
         for k, v in node.root.items():
-            if isinstance(v, FileTreeNode):
-                result[k] = self.convert(v)
+            if isinstance(v, FileNode):
+                result[k] = FileNodeConversionUtils.convert_to_internal(v)
 
         if not result:
             return None
