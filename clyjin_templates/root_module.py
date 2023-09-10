@@ -13,9 +13,9 @@ from clyjin_templates.utils.servicehub import ServiceHub
 
 
 class RootModule(Module[TemplatesArgs, Config]):
-    NAME = "_root"
-    DESCRIPTION = "create files and directories using templates"
-    ARGS = TemplatesArgs(
+    Name = "$root"
+    Description = "create files and directories using templates"
+    Args = TemplatesArgs(
         template_group=ModuleArg[str](
             names=["template_group"],
             type=str,

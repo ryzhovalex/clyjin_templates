@@ -12,9 +12,9 @@ from clyjin_templates.utils.servicehub import ServiceHub
 
 
 class AddModule(Module[AddArgs, Config]):
-    NAME = "add"
-    DESCRIPTION = "create files and directories using templates"
-    ARGS = AddArgs(
+    Name = "add"
+    Description = "create files and directories using templates"
+    Args = AddArgs(
         template_group_dir=ModuleArg[Path](
             names=["template_group_dir"],
             type=Path,

@@ -1,6 +1,6 @@
+import importlib.metadata
 from clyjin.base import Plugin, PluginInitializeData
 
-from clyjin_templates._project import get_version
 from clyjin_templates.add_module import AddModule
 from clyjin_templates.boot import Boot
 from clyjin_templates.root_module import RootModule
@@ -9,12 +9,12 @@ from clyjin_templates.utils.servicehub import ServiceHub
 
 
 class TemplatesPlugin(Plugin):
-    NAME = "template"
-    MODULE_CLASSES = [
+    Name = "template"
+    ModuleClasses = [
         RootModule,
         AddModule
     ]
-    VERSION = get_version()
+    Version = importlib.metadata.version("clyjin_templates")
 
     @classmethod
     async def initialize(
