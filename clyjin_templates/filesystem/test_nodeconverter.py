@@ -1,6 +1,8 @@
-from clyjin_templates.filetree.node import FileTreeNode, FileTreeNodeInternal
-from clyjin_templates.filetree.nodeconverter import InternalFileTreeNodeConverter
-from clyjin_templates.filetree.types import NodeType
+from clyjin_templates.filesystem.models import (FileTreeNode,
+                                                FileTreeNodeInternal, NodeRoot, NodeType)
+from clyjin_templates.filesystem.nodeconverter import \
+    FileTreeNodeConverter
+from clyjin_templates.template.group import TemplateGroup
 
 
 def test_s1(s1_root_node_internal: FileTreeNodeInternal):

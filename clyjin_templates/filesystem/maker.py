@@ -1,11 +1,11 @@
 from pathlib import Path
-from antievil import TypeExpectError, PleaseDefineError, UnsupportedError
+from typing import TYPE_CHECKING
 from clyjin.log import Log
 from mako.template import Template as MakoTemplate
-from clyjin_templates.filetree.node import FileTreeNode, FileTreeNodeInternal
-from clyjin_templates.filetree.types import NodeContent, NodeFieldValue, NodeRoot, NodeType
 from clyjin_templates.template.group import TemplateGroup
-from clyjin_templates.template.refname import RefTemplateName
+
+if TYPE_CHECKING:
+    from clyjin_templates.filesystem.models import FileTreeNodeInternal
 
 
 class FileMaker:
@@ -31,13 +31,13 @@ class FileMaker:
                 Where to save generated files and directories.
         """
         Log.info(
-            "[clyjin_templates] making file tree for"
+            "[clyjin_templates.filesystem] making file tree for"
             f" template <{template_group.name}>"
             f" in dir <{target_dir}>"
         )
 
     async def _make_node(
         self,
-        node: FileTreeNodeInternal
+        node: "FileTreeNodeInternal"
     ) -> None:
         pass

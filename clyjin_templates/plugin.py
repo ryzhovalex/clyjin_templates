@@ -1,9 +1,9 @@
 import importlib.metadata
 from clyjin.base import Plugin, PluginInitializeData
 
-from clyjin_templates.add_module import AddModule
+from clyjin_templates.modules import AddModule
 from clyjin_templates.boot import Boot
-from clyjin_templates.root_module import RootModule
+from clyjin_templates.modules import RootModule
 from clyjin_templates.template.group_service import TemplateGroupService
 from clyjin_templates.utils.servicehub import ServiceHub
 

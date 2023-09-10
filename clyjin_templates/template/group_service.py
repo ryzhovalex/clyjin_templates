@@ -5,7 +5,7 @@ from typing import Coroutine
 import aiofiles
 from pathlib import Path
 
-from antievil import NotFoundError, DuplicateNameError, DirectoryExpectedError
+from antievil import NotFoundError, DuplicateNameError, DirectoryExpectError
 from clyjin.log import Log
 from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
 from clyjin_templates.template.specparser import TemplateGroupSpecParser
@@ -147,7 +147,7 @@ class TemplateGroupService(Service):
         template to some temporary directory for test purposes.
         """
         if not group_dir.is_dir():
-            raise DirectoryExpectedError(path=group_dir)
+            raise DirectoryExpectError(path=group_dir)
         elif not Path(group_dir, "spec.yml").is_file():
             raise NotFoundError(
                 title="spec file for template group dir",

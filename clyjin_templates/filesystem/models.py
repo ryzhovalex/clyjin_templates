@@ -1,7 +1,31 @@
+from enum import Enum
 from pathlib import Path
+
 from clyjin.base import Model
-from pydantic import Field, RootModel
-from clyjin_templates.filetree.types import NodeContent, NodeFieldValue, NodeRoot, NodeType
+from pydantic import RootModel
+
+from clyjin_templates.template.refname import RefTemplateName
+
+
+class NodeFieldKey(Enum):
+    """
+    Various key fields used to build File Tree structures.
+
+    All should be prefixed by dollar sign.
+
+    Attributes:
+        Type:
+            Type of a node.
+        Content:
+            Content of a file.
+    """
+    Type = "$type"
+    Content = "$content"
+
+
+class NodeType(Enum):
+    File = "file"
+    Dir = "dir"
 
 
 class FileTreeNode(RootModel):
@@ -23,14 +47,19 @@ class FileTreeNode(RootModel):
             Children nodes by names. Should be None for file types. Defaults
             to None. Are accessed under other arbitrary names.
     """
-    root: NodeRoot | None = None
+    root: "NodeRoot | None" = None
 
 
+NodeContent = Path | str | RefTemplateName
+NodeFieldValue = FileTreeNode | NodeType | NodeContent
+NodeRoot = dict[str, NodeFieldValue | None]
 class FileTreeNodeInternal(Model):
     """
     Parsed internal version of
     ${ref.clyjin_templates.filetree.node.FileTreeNode}.
     """
-    type: NodeType
-    content: NodeContent | None = None
+    type: "NodeType"
+    content: "NodeContent | None" = None
     nodes: dict[str, "FileTreeNodeInternal"] | None = None
+
+FileTreeNode.model_rebuild()

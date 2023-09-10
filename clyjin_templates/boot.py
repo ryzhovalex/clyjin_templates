@@ -1,4 +1,6 @@
 from pathlib import Path
+from clyjin_templates.filesystem.models import FileTreeNode
+from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.template.group_service import TemplateGroupService
 from clyjin_templates.utils.service import Service
 from clyjin_templates.utils.servicehub import ServiceHub

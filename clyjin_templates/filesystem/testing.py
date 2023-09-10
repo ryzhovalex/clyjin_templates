@@ -1,8 +1,9 @@
-from pathlib import Path
 import pytest
 
-from clyjin_templates.filetree.node import FileTreeNode, FileTreeNodeInternal
-from clyjin_templates.filetree.nodeconverter import InternalFileTreeNodeConverter
+from clyjin_templates.filesystem.models import (FileTreeNode,
+                                                FileTreeNodeInternal)
+from clyjin_templates.filesystem.nodeconverter import \
+    FileTreeNodeConverter
 from clyjin_templates.template.group import TemplateGroup
 
 
@@ -13,4 +14,4 @@ def s1_root_node(s1_templategroup: TemplateGroup) -> FileTreeNode:
 
 @pytest.fixture
 def s1_root_node_internal(s1_root_node: FileTreeNode) -> FileTreeNodeInternal:
-    return InternalFileTreeNodeConverter().convert(s1_root_node)
+    return FileTreeNodeConverter().convert(s1_root_node)
