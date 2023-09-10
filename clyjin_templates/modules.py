@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 class RootModule(Module[TemplatesArgs, Config]):
     Name = "$root"
-    Description = "create files and directories using templates"
+    Description = "creates files and directories using template group"
     Args = TemplatesArgs(
         template_group=ModuleArg[str](
             names=["template_group"],
@@ -74,9 +74,9 @@ class RootModule(Module[TemplatesArgs, Config]):
             return self._rootdir
 
 
-class AddModule(Module[AddArgs, Config]):
-    Name = "add"
-    Description = "create files and directories using templates"
+class RegisterModule(Module[AddArgs, Config]):
+    Name = "register"
+    Description = "registers a new template"
     Args = AddArgs(
         template_group_dir=ModuleArg[Path](
             names=["template_group_dir"],
