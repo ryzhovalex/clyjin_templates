@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import aiofiles
 from antievil import (
@@ -16,13 +17,15 @@ from clyjin_templates.filesystem.models import (
     NodeContent,
     NodeType,
 )
-from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.template.vars import (
     TemplateGroupVar,
     TemplateGroupVarScope,
     TemplateGroupVarSpecialScope,
     TemplateGroupVarValue,
 )
+
+if TYPE_CHECKING:
+    from clyjin_templates.template.group import TemplateGroup
 
 
 class FileNodeMaker:
@@ -41,11 +44,11 @@ class FileNodeMaker:
         self,
         *,
         templates_dir: Path,
-        template_group: TemplateGroup,
+        template_group: "TemplateGroup",
         target_dir: Path,
     ) -> None:
         self._templates_dir: Path = templates_dir
-        self._template_group: TemplateGroup = template_group
+        self._template_group: "TemplateGroup" = template_group
         self._target_dir: Path = target_dir
 
     async def make(self) -> None:

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from antievil import (
     LogicError,
@@ -15,10 +16,7 @@ from clyjin_templates.filesystem.models import (
     NodeRoot,
     NodeType,
 )
-from clyjin_templates.template.group import (
-    TemplateGroup,
-    TemplateGroupInternal,
-)
+from clyjin_templates.template.group import TemplateGroupInternal
 from clyjin_templates.template.vars import (
     TemplateGroupVar,
     TemplateGroupVarInternal,
@@ -28,6 +26,9 @@ from clyjin_templates.template.vars import (
 from clyjin_templates.utils.klass import Static
 from clyjin_templates.utils.never import never
 
+if TYPE_CHECKING:
+    from clyjin_templates.template.group import TemplateGroup
+
 
 class TemplateGroupConversionUtils(Static):
     """
@@ -36,7 +37,7 @@ class TemplateGroupConversionUtils(Static):
     @classmethod
     def convert_to_internal(
         cls,
-        group: TemplateGroup,
+        group: "TemplateGroup",
         var_args: dict[str, TemplateGroupVarValue] | None = None,
     ) -> TemplateGroupInternal:
         internal_vars: TemplateGroupVarsInternal | None = \
@@ -53,7 +54,7 @@ class TemplateGroupConversionUtils(Static):
     @classmethod
     def _get_internal_vars(
         cls,
-        group: TemplateGroup,
+        group: "TemplateGroup",
         var_args: dict[str, TemplateGroupVarValue] | None = None,
     ) -> TemplateGroupVarsInternal | None:
         if group.vars is None:
@@ -215,7 +216,6 @@ class FileNodeConversionUtils(Static):
                 return FileNodeConversionUtils._get_file_node_content(content)
             case _:
                 never(_type)
-                return None
 
     @staticmethod
     def _get_file_node_content(

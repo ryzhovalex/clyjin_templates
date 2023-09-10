@@ -8,7 +8,7 @@ from antievil import DirectoryExpectError, DuplicateNameError, NotFoundError
 from clyjin.log import Log
 
 from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
-from clyjin_templates.template.specparser import TemplateGroupSpecParser
+from clyjin_templates.parsers import TemplateGroupSpecParser
 from clyjin_templates.utils.service import Service
 
 if TYPE_CHECKING:

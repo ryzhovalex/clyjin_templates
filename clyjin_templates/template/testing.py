@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from clyjin_templates.template.group import TemplateGroup
-from clyjin_templates.template.specparser import TemplateGroupSpecParser
+from clyjin_templates.parsers import TemplateGroupSpecParser
 
 
 @pytest.fixture

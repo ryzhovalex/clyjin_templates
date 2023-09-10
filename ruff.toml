@@ -1,6 +1,6 @@
 select = ["ALL"]
 
-fix = true
+fix = false
 line-length = 79
 respect-gitignore = true
 
@@ -10,6 +10,10 @@ exclude = [
 ]
 
 ignore = [
+    # do not paste explicit returns - sometimes it does not consider functions
+    # like never(...)
+    "RET503",
+
     # allow free format of todo links
     "TD003",
 
