@@ -4,7 +4,7 @@ from clyjin_templates.filesystem.models import (
     FileNode,
     FileNodeInternal,
 )
-from clyjin_templates.filesystem.utils import FileNodeConversionUtils
+from clyjin_templates.conversion import FileNodeConversionUtils
 from clyjin_templates.template.group import TemplateGroup
 
 

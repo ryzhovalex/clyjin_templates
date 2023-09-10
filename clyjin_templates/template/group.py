@@ -1,8 +1,8 @@
 from clyjin.base import Model
 
-from clyjin_templates.filesystem.models import FileNode
+from clyjin_templates.filesystem.models import FileNode, FileNodeInternal
 from clyjin_templates.template.template import Template
-from clyjin_templates.template.vars.vars import TemplateGroupVars
+from clyjin_templates.template.vars import TemplateGroupVars
 
 
 class TemplateGroup(Model):
@@ -24,6 +24,14 @@ class TemplateGroup(Model):
     """
     name: str
     tree: FileNode
+    templates: dict[str, Template | None] | None = None
+    description: str | None = None
+    vars: TemplateGroupVars | None = None
+
+
+class TemplateGroupInternal(Model):
+    name: str
+    tree: FileNodeInternal
     templates: dict[str, Template | None] | None = None
     description: str | None = None
     vars: TemplateGroupVars | None = None

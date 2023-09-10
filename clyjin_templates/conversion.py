@@ -14,8 +14,18 @@ from clyjin_templates.filesystem.models import (
     NodeRoot,
     NodeType,
 )
+from clyjin_templates.template.group import TemplateGroup, TemplateGroupInternal
 from clyjin_templates.utils.klass import Static
 from clyjin_templates.utils.never import never
+
+
+class TemplateGroupConversionUtils(Static):
+    """
+    Converts external Template Group to internal variant.
+    """
+    @staticmethod
+    def convert_to_internal(group: TemplateGroup) -> TemplateGroupInternal:
+        pass
 
 
 class FileNodeConversionUtils(Static):
@@ -23,10 +33,7 @@ class FileNodeConversionUtils(Static):
     Converts external FileTreeNodes to internal variants.
     """
     @staticmethod
-    def convert_to_internal(
-        node: FileNode,
-    ) -> FileNodeInternal:
-
+    def convert_to_internal(node: FileNode) -> FileNodeInternal:
         root: NodeRoot | None = node.root
         _type: NodeType | None = FileNodeConversionUtils._get_node_type(root)
 

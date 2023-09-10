@@ -7,7 +7,7 @@ from clyjin.base.moduledata import ModuleData
 from clyjin.log import Log
 
 from clyjin_templates.args import AddArgs, TemplatesArgs
-from clyjin_templates.filesystem.maker import FileMaker
+from clyjin_templates.filesystem.maker import FileNodeMaker
 from clyjin_templates.template.group_service import TemplateGroupService
 from clyjin_templates.utils.servicehub import ServiceHub
 
@@ -60,7 +60,7 @@ class RootModule(Module[TemplatesArgs, Config]):
             template_group_name,
         )
 
-        await FileMaker().make(template_group, target_dir)
+        await FileNodeMaker().make(template_group, target_dir)
 
     def _initialize(self) -> None:
         self._template_group_service = ServiceHub.ie().get(

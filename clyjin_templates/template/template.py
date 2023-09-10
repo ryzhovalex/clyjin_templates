@@ -1,10 +1,8 @@
 from clyjin.base import Model
 
 from clyjin_templates.template.source import TemplateSource
-from clyjin_templates.template.vars.scope import (
-    TemplateGroupVarScope,
-    TemplateGroupVarSpecialScope,
-)
+from clyjin_templates.template.vars import (TemplateGroupVarScope,
+                                            TemplateGroupVarSpecialScope)
 
 
 class Template(Model):
@@ -21,4 +19,4 @@ class Template(Model):
             Variable scope this template works in. Defaults to `$all`.
     """
     source: TemplateSource | None = None
-    scope: TemplateGroupVarScope = TemplateGroupVarSpecialScope.All
+    scopes: list[TemplateGroupVarScope] | None = None

@@ -1,4 +1,4 @@
-from clyjin_templates.filesystem.maker import FileMaker
+from clyjin_templates.filesystem.maker import FileNodeMaker
 from clyjin_templates.filesystem.models import (
     FileNode,
     NodeContent,
@@ -15,5 +15,5 @@ __all__ = [
     "NodeRoot",
     "NodeType",
     "FileNode",
-    "FileMaker",
+    "FileNodeMaker",
 ]
