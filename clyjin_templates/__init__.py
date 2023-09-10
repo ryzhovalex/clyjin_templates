@@ -1,4 +1,5 @@
 import importlib.metadata
+
 from clyjin_templates._project import get_version as _get_version
 from clyjin_templates.plugin import TemplatesPlugin
 

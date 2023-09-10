@@ -1,16 +1,15 @@
 import asyncio
 import os
 import shutil
-from typing import Coroutine
-import aiofiles
 from pathlib import Path
+from typing import Coroutine
 
-from antievil import NotFoundError, DuplicateNameError, DirectoryExpectError
+from antievil import DirectoryExpectError, DuplicateNameError, NotFoundError
 from clyjin.log import Log
-from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
-from clyjin_templates.template.specparser import TemplateGroupSpecParser
 
+from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
 from clyjin_templates.template.group import TemplateGroup
+from clyjin_templates.template.specparser import TemplateGroupSpecParser
 from clyjin_templates.utils.service import Service
 
 
@@ -21,7 +20,7 @@ class TemplateGroupService(Service):
     def __init__(
         self,
         root_dir: Path,
-        groups_dir: Path
+        groups_dir: Path,
     ) -> None:
         self._root_dir: Path = root_dir
         self._groups_dir: Path = groups_dir
@@ -37,7 +36,7 @@ class TemplateGroupService(Service):
         except KeyError as error:
             raise NotFoundError(
                 title="template group with name",
-                value=name
+                value=name,
             ) from error
 
     async def add(
@@ -45,7 +44,7 @@ class TemplateGroupService(Service):
         dir: Path,
         *,
         name: str | None = None,
-        is_update: bool = False
+        is_update: bool = False,
     ) -> None:
         """
         Adds a new template group to the storage.
@@ -67,24 +66,24 @@ class TemplateGroupService(Service):
 
         Log.info(
             f"[clyjin_templates] adding template <{final_name}>"
-            f" group from path <{dir}>"
+            f" group from path <{dir}>",
         )
 
         destination_dir: Path = Path(
             self._groups_dir,
-            final_name
+            final_name,
         )
 
         Log.info(
             f"[clyjin_templates] copying group <{final_name}>"
-            f" from <{dir}> to <{destination_dir}>"
+            f" from <{dir}> to <{destination_dir}>",
         )
 
         # do regular 1-to-1 copying
         shutil.copytree(
             dir,
             destination_dir,
-            dirs_exist_ok=is_update
+            dirs_exist_ok=is_update,
         )
 
         await self._load(final_name)
@@ -96,8 +95,7 @@ class TemplateGroupService(Service):
         loading_coros: list[Coroutine[None, None, None]] = []
 
         for _, dirnames, _ in os.walk(self._groups_dir):
-            for dirname in dirnames:
-                loading_coros.append(self._load(dirname))
+            loading_coros = [self._load(dirname) for dirname in dirnames]
 
         await asyncio.gather(*loading_coros)
 
@@ -107,13 +105,13 @@ class TemplateGroupService(Service):
         """
         group_dir: Path = Path(
             self._groups_dir,
-            name
+            name,
         )
         self._softcheck_group_dir(group_dir)
 
         spec_path: Path = Path(
             group_dir,
-            "spec.yml"
+            "spec.yml",
         )
         self._group_by_name[name] = TemplateGroupSpecParser().parse(spec_path)
 
@@ -133,7 +131,7 @@ class TemplateGroupService(Service):
         if name in self._group_by_name:
             raise DuplicateNameError(
                 title="template group name",
-                name=name
+                name=name,
             )
 
     def _softcheck_group_dir(self, group_dir: Path) -> None:
@@ -151,5 +149,5 @@ class TemplateGroupService(Service):
         elif not Path(group_dir, "spec.yml").is_file():
             raise NotFoundError(
                 title="spec file for template group dir",
-                value=group_dir
+                value=group_dir,
             )

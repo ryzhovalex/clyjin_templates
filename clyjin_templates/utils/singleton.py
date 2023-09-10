@@ -20,10 +20,9 @@ class SingletonMeta(type):
         return cls.__instances[cls]
 
     def __validate_in_instances(cls, cannot_message: str) -> None:
-        if cls not in cls.__instances.keys():
-            raise ValueError(
-                f"{cannot_message} - class {cls} not initialized"
-            )
+        if cls not in cls.__instances:
+            errmsg: str = f"{cannot_message} - class {cls} not initialized"
+            raise ValueError(errmsg)
 
     def discard(cls, should_validate: bool = True) -> None:
         if should_validate:

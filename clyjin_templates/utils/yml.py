@@ -26,7 +26,7 @@ class NotValidFileSuffixError(Exception):
 
 
 def load_yml(
-    p: Path, *, loader: YmlLoader = YmlLoader.SAFE
+    p: Path, *, loader: YmlLoader = YmlLoader.SAFE,
 ) -> dict[str, Any]:
     """Loads yaml from file.
 
@@ -48,18 +48,19 @@ def load_yml(
             Yaml file is not valid.
     """
     if p.suffix.lower() not in [".yaml", ".yml"]:
-        raise NotValidFileSuffixError(f"suffix {p.suffix} is not valid suffix")
+        errmsg: str = f"suffix {p.suffix} is not valid suffix"
+        raise NotValidFileSuffixError(errmsg)
 
-    with open(p) as file:
+    with Path.open(p) as file:
         data = yaml.load(file, Loader=loader.value)  # noqa: S506
         if data is None:
             # Empty files should return empty dicts
             data = {}
         # Is it necessary? Does pyyaml allow loading not-valid yaml files?
         elif type(data) is not dict:
-            raise NotValidYmlError(
-                "Yaml file should contain any map-like structure,"
+            errmsg: str = \
+                "Yaml file should contain any map-like structure," \
                 " not plain types"
-            )
+            raise NotValidYmlError(errmsg)
 
     return data

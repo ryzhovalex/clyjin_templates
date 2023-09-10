@@ -1,8 +1,4 @@
-from clyjin_templates.filesystem.models import (FileTreeNode,
-                                                FileTreeNodeInternal, NodeRoot, NodeType)
-from clyjin_templates.filesystem.nodeconverter import \
-    FileTreeNodeConverter
-from clyjin_templates.template.group import TemplateGroup
+from clyjin_templates.filesystem.models import FileTreeNodeInternal, NodeType
 
 
 def test_s1(s1_root_node_internal: FileTreeNodeInternal):
@@ -19,7 +15,7 @@ def test_s1(s1_root_node_internal: FileTreeNodeInternal):
                     "__init__.py": FileTreeNodeInternal(
                         type=NodeType.File,
                         content="&s1_1.py",
-                        nodes=None
+                        nodes=None,
                     ),
                     "drivers": FileTreeNodeInternal(
                         type=NodeType.Dir,
@@ -28,22 +24,22 @@ def test_s1(s1_root_node_internal: FileTreeNodeInternal):
                             "main.py": FileTreeNodeInternal(
                                 type=NodeType.File,
                                 content="&s1_2.py",
-                                nodes=None
-                            )
-                        }
+                                nodes=None,
+                            ),
+                        },
                     ),
                     "local": FileTreeNodeInternal(
                         type=NodeType.Dir,
                         content=None,
-                        nodes=None
-                    )
-                }
+                        nodes=None,
+                    ),
+                },
             ),
             "README.md": FileTreeNodeInternal(
                 type=NodeType.File,
-                content="# s1_readme"
-            )
-        }
+                content="# s1_readme",
+            ),
+        },
     )
 
     assert node == expected_node

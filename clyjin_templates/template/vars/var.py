@@ -1,5 +1,9 @@
 from clyjin.base import Model
-from clyjin_templates.template.vars.scope import TemplateGroupVarScope, TemplateGroupVarSpecialScope
+
+from clyjin_templates.template.vars.scope import (
+    TemplateGroupVarScope,
+    TemplateGroupVarSpecialScope,
+)
 
 TemplateGroupVarValue = str | int | float | bool | list | dict
 

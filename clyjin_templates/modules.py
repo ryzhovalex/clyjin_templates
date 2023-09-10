@@ -1,15 +1,18 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
+from antievil import DirectoryExpectError, UnsetValueError
 from clyjin.base import Config, Module, ModuleArg
 from clyjin.base.moduledata import ModuleData
 from clyjin.log import Log
-from antievil import UnsetValueError, DirectoryExpectError
 
 from clyjin_templates.args import AddArgs, TemplatesArgs
 from clyjin_templates.filesystem.maker import FileMaker
 from clyjin_templates.template.group_service import TemplateGroupService
-from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.utils.servicehub import ServiceHub
+
+if TYPE_CHECKING:
+    from clyjin_templates.template.group import TemplateGroup
 
 
 class RootModule(Module[TemplatesArgs, Config]):
@@ -25,13 +28,13 @@ class RootModule(Module[TemplatesArgs, Config]):
             names=["-o", "--output-dir"],
             type=Path,
             required=False,
-            help="where to output generated files. Defaults to current dir."
-        )
+            help="where to output generated files. Defaults to current dir.",
+        ),
     )
 
     def __init__(
         self,
-        module_data: ModuleData[TemplatesArgs, Config]
+        module_data: ModuleData[TemplatesArgs, Config],
     ) -> None:
         super().__init__(module_data)
 
@@ -44,24 +47,24 @@ class RootModule(Module[TemplatesArgs, Config]):
         target_dir: Path = self._get_target_dir()
         if target_dir.exists() and not target_dir.is_dir():
             raise DirectoryExpectError(
-                path=target_dir
+                path=target_dir,
             )
         target_dir.mkdir(parents=True, exist_ok=True)
 
         Log.info(
             "[clyjin_templates] choosing template"
-            f" group <{template_group_name}>"
+            f" group <{template_group_name}>",
         )
 
         template_group: TemplateGroup = self._template_group_service.get(
-            template_group_name
+            template_group_name,
         )
 
         await FileMaker().make(template_group, target_dir)
 
     def _initialize(self) -> None:
         self._template_group_service = ServiceHub.ie().get(
-            TemplateGroupService
+            TemplateGroupService,
         )
 
     def _get_target_dir(self) -> Path:
@@ -85,7 +88,7 @@ class AddModule(Module[AddArgs, Config]):
             type=str,
             help=
                 "name to assign for added template group."
-                " Dir's name is used by default."
+                " Dir's name is used by default.",
         ),
         is_update=ModuleArg[bool](
             names=["-u", "--update"],
@@ -94,13 +97,13 @@ class AddModule(Module[AddArgs, Config]):
             argparse_type=type,
             help=
                 "if should overwrite existing group."
-                " By default will raise an error if an existing group occurs."
-        )
+                " By default will raise an error if an existing group occurs.",
+        ),
     )
 
     def __init__(
         self,
-        module_data: ModuleData[AddArgs, Config]
+        module_data: ModuleData[AddArgs, Config],
     ) -> None:
         super().__init__(module_data)
 
@@ -113,12 +116,12 @@ class AddModule(Module[AddArgs, Config]):
         await self._template_group_service.add(
             input_dir,
             name=name,
-            is_update=self.args.is_update
+            is_update=self.args.is_update,
         )
 
     def _initialize(self) -> None:
         self._template_group_service = ServiceHub.ie().get(
-            TemplateGroupService
+            TemplateGroupService,
         )
 
     def _get_name(self) -> str | None:

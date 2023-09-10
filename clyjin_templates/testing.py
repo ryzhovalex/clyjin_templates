@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pytest
 
 
@@ -16,5 +17,5 @@ def tests_template_groups_dir(tests_dir: Path) -> Path:
 def s1_templategroup_dir(tests_template_groups_dir: Path) -> Path:
     return Path(
         tests_template_groups_dir,
-        "s1"
+        "s1",
     )

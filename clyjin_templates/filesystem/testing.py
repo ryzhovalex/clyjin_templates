@@ -1,9 +1,10 @@
 import pytest
 
-from clyjin_templates.filesystem.models import (FileTreeNode,
-                                                FileTreeNodeInternal)
-from clyjin_templates.filesystem.nodeconverter import \
-    FileTreeNodeConverter
+from clyjin_templates.filesystem.models import (
+    FileTreeNode,
+    FileTreeNodeInternal,
+)
+from clyjin_templates.filesystem.nodeconverter import FileTreeNodeConverter
 from clyjin_templates.template.group import TemplateGroup
 
 

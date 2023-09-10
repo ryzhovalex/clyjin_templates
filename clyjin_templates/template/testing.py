@@ -10,5 +10,5 @@ from clyjin_templates.template.specparser import TemplateGroupSpecParser
 def s1_templategroup(s1_templategroup_dir: Path) -> TemplateGroup:
     return TemplateGroupSpecParser().parse(Path(
         s1_templategroup_dir,
-        "spec.yml"
+        "spec.yml",
     ))

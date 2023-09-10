@@ -1,8 +1,10 @@
-from pathlib import Path
 from clyjin.base import Model
 
 from clyjin_templates.template.source import TemplateSource
-from clyjin_templates.template.vars.scope import TemplateGroupVarScope, TemplateGroupVarSpecialScope
+from clyjin_templates.template.vars.scope import (
+    TemplateGroupVarScope,
+    TemplateGroupVarSpecialScope,
+)
 
 
 class Template(Model):

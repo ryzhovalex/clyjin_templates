@@ -1,8 +1,7 @@
 from pathlib import Path
-from pprint import pprint
 from typing import Any
 
-from antievil import FileExpectError, TypeExpectError
+from antievil import FileExpectError
 
 from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.utils.yml import load_yml
@@ -14,7 +13,7 @@ class TemplateGroupSpecParser:
     """
     def parse(
         self,
-        spec_path: Path
+        spec_path: Path,
     ) -> TemplateGroup:
         self._check_spec_path(spec_path)
         spec: dict[str, Any] = load_yml(spec_path)

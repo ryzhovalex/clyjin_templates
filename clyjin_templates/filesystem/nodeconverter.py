@@ -1,17 +1,19 @@
 from pathlib import Path
 
-from antievil import (LogicError, PleaseDefineError, TypeExpectError,
-                      UnsupportedError)
-from clyjin.log import Log
-from mako.template import Template as MakoTemplate
+from antievil import (
+    LogicError,
+    TypeExpectError,
+    UnsupportedError,
+)
 
-from clyjin_templates.filesystem.models import (FileTreeNode,
-                                                FileTreeNodeInternal,
-                                                NodeContent, NodeFieldKey,
-                                                NodeFieldValue, NodeRoot,
-                                                NodeType)
-from clyjin_templates.template.group import TemplateGroup
-from clyjin_templates.template.refname import RefTemplateName
+from clyjin_templates.filesystem.models import (
+    FileTreeNode,
+    FileTreeNodeInternal,
+    NodeContent,
+    NodeFieldValue,
+    NodeRoot,
+    NodeType,
+)
 from clyjin_templates.utils.never import never
 
 
@@ -21,7 +23,7 @@ class FileTreeNodeConverter:
     """
     def convert(
         self,
-        node: FileTreeNode
+        node: FileTreeNode,
     ) -> FileTreeNodeInternal:
 
         root: NodeRoot | None = node.root
@@ -31,25 +33,25 @@ class FileTreeNodeConverter:
         if root is not None:
             content = self._get_node_content(
                 root,
-                _type
+                _type,
             )
 
         nodes: dict[str, FileTreeNodeInternal] | None = self._convert_nodes(
-            node
+            node,
         )
         final_type: NodeType = self._get_final_type(_type, content, nodes)
 
         return FileTreeNodeInternal(
             type=final_type,
             content=content,
-            nodes=nodes
+            nodes=nodes,
         )
 
     def _get_final_type(
         self,
         pretype: NodeType | None,
         content: NodeContent | None,
-        nodes: dict[str, FileTreeNodeInternal] | None
+        nodes: dict[str, FileTreeNodeInternal] | None,
     ) -> NodeType:
         """
         Finds final type out of existing node parameters.
@@ -78,7 +80,7 @@ class FileTreeNodeConverter:
 
     def _get_node_type(
         self,
-        root: NodeRoot | None
+        root: NodeRoot | None,
     ) -> NodeType | None:
         if root is None:
             return NodeType.Dir
@@ -98,14 +100,14 @@ class FileTreeNodeConverter:
                 obj=_type,
                 ExpectedType=NodeType,
                 expected_inheritance="instance",
-                ActualType=type(_type)
+                ActualType=type(_type),
             )
         return _type
 
     def _get_node_content(
         self,
         root: NodeRoot,
-        _type: NodeType | None
+        _type: NodeType | None,
     ) -> NodeContent | None:
         content: NodeFieldValue | None = root.get("$content", None)
 
@@ -120,17 +122,18 @@ class FileTreeNodeConverter:
                 # have content field
                 raise UnsupportedError(
                     title="`$content` field for node of type",
-                    value=_type
+                    value=_type,
                 )
             case None:
                 # content is not None and type is None, assuming file
                 return self._get_file_node_content(content)
             case _:
                 never(_type)
+                return None
 
     def _get_file_node_content(
         self,
-        maybe_content: NodeFieldValue
+        maybe_content: NodeFieldValue,
     ) -> NodeContent:
         if not isinstance(maybe_content, (str, Path)):
             raise TypeExpectError(
@@ -140,14 +143,14 @@ class FileTreeNodeConverter:
                 # 0
                 ExpectedType=str,
                 expected_inheritance="instance",
-                ActualType=type(maybe_content)
+                ActualType=type(maybe_content),
             )
 
         return maybe_content
 
     def _convert_nodes(
         self,
-        node: FileTreeNode
+        node: FileTreeNode,
     ) -> dict[str, FileTreeNodeInternal] | None:
         if node.root is None:
             return None

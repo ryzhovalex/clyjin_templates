@@ -1,7 +1,9 @@
 import typing
+
+from antievil import NotFoundError
+
 from clyjin_templates.utils.service import Service, ServiceType
 from clyjin_templates.utils.singleton import Singleton
-from antievil import NotFoundError
 
 
 class ServiceHub(Singleton):
@@ -10,7 +12,7 @@ class ServiceHub(Singleton):
     """
     def __init__(
         self,
-        services: list[Service]
+        services: list[Service],
     ) -> None:
         super().__init__()
 
@@ -22,12 +24,12 @@ class ServiceHub(Singleton):
         try:
             return typing.cast(
                 ServiceType,
-                self._service_by_class[ServiceClass]
+                self._service_by_class[ServiceClass],
             )
         except KeyError as error:
             raise NotFoundError(
                 title="service class",
-                value=ServiceClass
+                value=ServiceClass,
             ) from error
 
     def _save_services(self, services: list[Service]) -> None:
