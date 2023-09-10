@@ -1,22 +1,28 @@
 import asyncio
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+
 import aiofiles
-from antievil import LengthExpectError, TypeExpectError, UnsetValueError, UnsupportedError
+from antievil import (
+    TypeExpectError,
+    UnsetValueError,
+)
 from antievil.utils import never
-
 from clyjin.log import Log
-
 from mako.template import Template as MakoTemplate
-from clyjin_templates.conversion import FileNodeConversionUtils
-from clyjin_templates.filesystem.models import FileNode, FileNodeInternal, NodeContent, NodeType
-from clyjin_templates.template.vars.scope import TemplateGroupVarScope
-from clyjin_templates.template.vars.var import TemplateGroupVarValue
-from clyjin_templates.template.vars import TemplateGroupVar, TemplateGroupVarSpecialScope
-from clyjin_templates.utils import yml
 
-if TYPE_CHECKING:
-    from clyjin_templates.template.group import TemplateGroup
+from clyjin_templates.conversion import FileNodeConversionUtils
+from clyjin_templates.filesystem.models import (
+    FileNodeInternal,
+    NodeContent,
+    NodeType,
+)
+from clyjin_templates.template.group import TemplateGroup
+from clyjin_templates.template.vars import (
+    TemplateGroupVar,
+    TemplateGroupVarScope,
+    TemplateGroupVarSpecialScope,
+    TemplateGroupVarValue,
+)
 
 
 class FileNodeMaker:
@@ -100,7 +106,8 @@ class FileNodeMaker:
 
         # to avoid unexpected overwriting, file shouldn't exist
         if final_path.exists():
-            raise FileExistsError(f"file=<{final_path}> exists")
+            errmsg: str = f"file=<{final_path}> exists"
+            raise FileExistsError(errmsg)
 
         final_content: str = await self._get_final_content(node.content)
 
@@ -131,6 +138,7 @@ class FileNodeMaker:
         MakoTemplate(raw_content).render(
             **final_vars,
         )
+        return None
 
     def _get_final_vars(
         self, scope: TemplateGroupVarScope,
@@ -143,12 +151,12 @@ class FileNodeMaker:
         if not self._template_group.vars:
             return {}
 
-        result: dict[str, TemplateGroupVarValue] = {}
         vars_dump: dict[str, TemplateGroupVar | None] = \
             self._template_group.vars.model_dump()
 
-        for var_name, var_value in vars_dump.items():
-            if
+        for _var_name, _var_value in vars_dump.items():
+            pass
+        return None
 
     async def _get_raw_content_string(
         self, node_content: NodeContent,

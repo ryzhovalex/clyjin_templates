@@ -2,15 +2,17 @@ import asyncio
 import os
 import shutil
 from pathlib import Path
-from typing import Coroutine
+from typing import TYPE_CHECKING, Coroutine
 
 from antievil import DirectoryExpectError, DuplicateNameError, NotFoundError
 from clyjin.log import Log
 
 from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
-from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.template.specparser import TemplateGroupSpecParser
 from clyjin_templates.utils.service import Service
+
+if TYPE_CHECKING:
+    from clyjin_templates.template.group import TemplateGroup
 
 
 class TemplateGroupService(Service):
@@ -25,9 +27,9 @@ class TemplateGroupService(Service):
         self._root_dir: Path = root_dir
         self._groups_dir: Path = groups_dir
         self._is_loaded: bool = False
-        self._group_by_name: dict[str, TemplateGroup] = {}
+        self._group_by_name: dict[str, "TemplateGroup"] = {}
 
-    def get(self, name: str) -> TemplateGroup:
+    def get(self, name: str) -> "TemplateGroup":
         """
         Gets group by name.
         """

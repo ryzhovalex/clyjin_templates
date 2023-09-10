@@ -22,8 +22,8 @@ from clyjin_templates.template.group import (
 from clyjin_templates.template.vars import (
     TemplateGroupVar,
     TemplateGroupVarInternal,
-    TemplateGroupVarValue,
     TemplateGroupVarsInternal,
+    TemplateGroupVarValue,
 )
 from clyjin_templates.utils.klass import Static
 from clyjin_templates.utils.never import never
@@ -37,7 +37,7 @@ class TemplateGroupConversionUtils(Static):
     def convert_to_internal(
         cls,
         group: TemplateGroup,
-        var_args: dict[str, TemplateGroupVarValue] | None = None
+        var_args: dict[str, TemplateGroupVarValue] | None = None,
     ) -> TemplateGroupInternal:
         internal_vars: TemplateGroupVarsInternal | None = \
             cls._get_internal_vars(group, var_args)
@@ -47,14 +47,14 @@ class TemplateGroupConversionUtils(Static):
             tree=FileNodeConversionUtils.convert_to_internal(group.tree),
             templates=group.templates,
             description=group.description,
-            vars=internal_vars
+            vars=internal_vars,
         )
 
     @classmethod
     def _get_internal_vars(
         cls,
         group: TemplateGroup,
-        var_args: dict[str, TemplateGroupVarValue] | None = None
+        var_args: dict[str, TemplateGroupVarValue] | None = None,
     ) -> TemplateGroupVarsInternal | None:
         if group.vars is None:
             return None
@@ -65,7 +65,7 @@ class TemplateGroupConversionUtils(Static):
             result[var_name] = cls._get_internal_var(
                 var_name,
                 var,
-                var_args.get(var_name, None) if var_args is not None else None
+                var_args.get(var_name, None) if var_args is not None else None,
             )
 
         return TemplateGroupVarsInternal.model_validate(result)
@@ -75,7 +75,7 @@ class TemplateGroupConversionUtils(Static):
         cls,
         var_name: str,
         var: TemplateGroupVar | None,
-        var_arg: TemplateGroupVarValue | None = None
+        var_arg: TemplateGroupVarValue | None = None,
     ) -> TemplateGroupVarInternal:
         final_value: TemplateGroupVarValue
 
@@ -86,7 +86,7 @@ class TemplateGroupConversionUtils(Static):
         if default is None and var_arg is None:
             raise PleaseDefineError(
                 cannot_do="template vars initializing",
-                please_define=f"variable=<{var_name}>"
+                please_define=f"variable=<{var_name}>",
             )
         elif default is None and var_arg is not None:
             final_value = var_arg
@@ -99,7 +99,7 @@ class TemplateGroupConversionUtils(Static):
         return TemplateGroupVarInternal(
             default=default,
             scopes=var.scopes if var is not None else None,
-            value=final_value
+            value=final_value,
         )
 
 
