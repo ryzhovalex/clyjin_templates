@@ -1,4 +1,5 @@
 from enum import Enum
+
 from clyjin.base import Model
 from pydantic import RootModel
 
@@ -37,7 +38,7 @@ class TemplateGroupVar(Model):
 
 
 class TemplateGroupVarInternal(Model):
-    default: TemplateGroupVarValue
+    default: TemplateGroupVarValue | None = None
     scopes: list[TemplateGroupVarScope] | None = None
     value: TemplateGroupVarValue
     """
@@ -52,4 +53,4 @@ class TemplateGroupVars(RootModel):
 class TemplateGroupVarsInternal(RootModel):
     # internal variant have var value strictly defined since updating it via
     # different sources
-    root: dict[str, TemplateGroupVar]
+    root: dict[str, TemplateGroupVarInternal]

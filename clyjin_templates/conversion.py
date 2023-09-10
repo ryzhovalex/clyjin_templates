@@ -2,6 +2,7 @@ from pathlib import Path
 
 from antievil import (
     LogicError,
+    PleaseDefineError,
     TypeExpectError,
     UnsupportedError,
 )
@@ -14,7 +15,16 @@ from clyjin_templates.filesystem.models import (
     NodeRoot,
     NodeType,
 )
-from clyjin_templates.template.group import TemplateGroup, TemplateGroupInternal
+from clyjin_templates.template.group import (
+    TemplateGroup,
+    TemplateGroupInternal,
+)
+from clyjin_templates.template.vars import (
+    TemplateGroupVar,
+    TemplateGroupVarInternal,
+    TemplateGroupVarValue,
+    TemplateGroupVarsInternal,
+)
 from clyjin_templates.utils.klass import Static
 from clyjin_templates.utils.never import never
 
@@ -23,9 +33,74 @@ class TemplateGroupConversionUtils(Static):
     """
     Converts external Template Group to internal variant.
     """
-    @staticmethod
-    def convert_to_internal(group: TemplateGroup) -> TemplateGroupInternal:
-        pass
+    @classmethod
+    def convert_to_internal(
+        cls,
+        group: TemplateGroup,
+        var_args: dict[str, TemplateGroupVarValue] | None = None
+    ) -> TemplateGroupInternal:
+        internal_vars: TemplateGroupVarsInternal | None = \
+            cls._get_internal_vars(group, var_args)
+
+        return TemplateGroupInternal(
+            name=group.name,
+            tree=FileNodeConversionUtils.convert_to_internal(group.tree),
+            templates=group.templates,
+            description=group.description,
+            vars=internal_vars
+        )
+
+    @classmethod
+    def _get_internal_vars(
+        cls,
+        group: TemplateGroup,
+        var_args: dict[str, TemplateGroupVarValue] | None = None
+    ) -> TemplateGroupVarsInternal | None:
+        if group.vars is None:
+            return None
+
+        result: dict[str, TemplateGroupVarInternal] = {}
+
+        for var_name, var in group.vars.model_dump().items():
+            result[var_name] = cls._get_internal_var(
+                var_name,
+                var,
+                var_args.get(var_name, None) if var_args is not None else None
+            )
+
+        return TemplateGroupVarsInternal.model_validate(result)
+
+    @classmethod
+    def _get_internal_var(
+        cls,
+        var_name: str,
+        var: TemplateGroupVar | None,
+        var_arg: TemplateGroupVarValue | None = None
+    ) -> TemplateGroupVarInternal:
+        final_value: TemplateGroupVarValue
+
+        default: TemplateGroupVarValue | None = None
+        if var is not None and var.default is not None:
+            default = var.default
+
+        if default is None and var_arg is None:
+            raise PleaseDefineError(
+                cannot_do="template vars initializing",
+                please_define=f"variable=<{var_name}>"
+            )
+        elif default is None and var_arg is not None:
+            final_value = var_arg
+        elif default is not None and var_arg is None:
+            final_value = default
+        else:
+            errmsg: str = "reached unexpected branch"
+            raise LogicError(errmsg)
+
+        return TemplateGroupVarInternal(
+            default=default,
+            scopes=var.scopes if var is not None else None,
+            value=final_value
+        )
 
 
 class FileNodeConversionUtils(Static):
@@ -49,7 +124,7 @@ class FileNodeConversionUtils(Static):
         final_type: NodeType = FileNodeConversionUtils._get_final_type(
             _type,
             content,
-            nodes
+            nodes,
         )
 
         return FileNodeInternal(

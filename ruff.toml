@@ -10,6 +10,9 @@ exclude = [
 ]
 
 ignore = [
+    # allow free format of todo links
+    "TD003",
+
     # not convenient for inherited classes setup
     "RUF012",
 

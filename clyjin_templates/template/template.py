@@ -1,8 +1,9 @@
 from clyjin.base import Model
 
 from clyjin_templates.template.source import TemplateSource
-from clyjin_templates.template.vars import (TemplateGroupVarScope,
-                                            TemplateGroupVarSpecialScope)
+from clyjin_templates.template.vars import (
+    TemplateGroupVarScope,
+)
 
 
 class Template(Model):

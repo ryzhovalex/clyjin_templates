@@ -8,7 +8,7 @@ from antievil.utils import never
 from clyjin.log import Log
 
 from mako.template import Template as MakoTemplate
-from clyjin_templates.filesystem.utils import FileNodeConversionUtils
+from clyjin_templates.conversion import FileNodeConversionUtils
 from clyjin_templates.filesystem.models import FileNode, FileNodeInternal, NodeContent, NodeType
 from clyjin_templates.template.vars.scope import TemplateGroupVarScope
 from clyjin_templates.template.vars.var import TemplateGroupVarValue
@@ -36,7 +36,7 @@ class FileNodeMaker:
         *,
         templates_dir: Path,
         template_group: TemplateGroup,
-        target_dir: Path
+        target_dir: Path,
     ) -> None:
         self._templates_dir: Path = templates_dir
         self._template_group: TemplateGroup = template_group
@@ -54,31 +54,31 @@ class FileNodeMaker:
         )
         internal_root_node: FileNodeInternal = \
             FileNodeConversionUtils.convert_to_internal(
-                self._template_group.tree
+                self._template_group.tree,
             )
 
         await self._make_subnodes(internal_root_node)
 
     async def _make_subnodes(
-        self, host_node: FileNodeInternal
+        self, host_node: FileNodeInternal,
     ) -> None:
         subnodes: dict[str, FileNodeInternal] | None = \
             host_node.nodes
         if subnodes is None:
             raise UnsetValueError(
-                explanation="cannot initialize root node subnodes"
+                explanation="cannot initialize root node subnodes",
             )
 
         await asyncio.gather(*[
             self._make_node(
-                node, node_name
+                node, node_name,
             ) for node_name, node in subnodes.items()
         ])
 
     async def _make_node(
         self,
         node: FileNodeInternal,
-        node_name: str
+        node_name: str,
     ) -> None:
         match node.type:
             case NodeType.File:
@@ -91,11 +91,11 @@ class FileNodeMaker:
     async def _make_file_node(
         self,
         node: FileNodeInternal,
-        node_name: str
+        node_name: str,
     ) -> None:
         final_path: Path = Path(
             self._target_dir,
-            node_name
+            node_name,
         )
 
         # to avoid unexpected overwriting, file shouldn't exist
@@ -109,7 +109,7 @@ class FileNodeMaker:
 
     async def _get_final_content(
         self,
-        node_content: NodeContent | None
+        node_content: NodeContent | None,
     ) -> str:
         """
         Transform whatever is in node content into final writeable string.
@@ -129,11 +129,11 @@ class FileNodeMaker:
             self._get_final_vars(TemplateGroupVarSpecialScope.All)
 
         MakoTemplate(raw_content).render(
-            **final_vars
+            **final_vars,
         )
 
     def _get_final_vars(
-        self, scope: TemplateGroupVarScope
+        self, scope: TemplateGroupVarScope,
     ) -> dict[str, TemplateGroupVarValue]:
         """
         Parses template group vars
@@ -151,7 +151,7 @@ class FileNodeMaker:
             if
 
     async def _get_raw_content_string(
-        self, node_content: NodeContent
+        self, node_content: NodeContent,
     ) -> str:
         if isinstance(node_content, Path):
             async with aiofiles.open(node_content, "r") as f:
@@ -159,7 +159,7 @@ class FileNodeMaker:
         elif isinstance(node_content, str):
             if node_content and node_content[0] == "&":
                 return await self._get_template_raw_content_by_ref(
-                    node_content
+                    node_content,
                 )
 
             return node_content
@@ -168,19 +168,19 @@ class FileNodeMaker:
             obj=node_content,
             ExpectedType=str,
             expected_inheritance="instance",
-            ActualType=type(node_content)
+            ActualType=type(node_content),
         )
 
     async def _get_template_raw_content_by_ref(
         self,
-        ref: str
+        ref: str,
     ) -> str:
         # remove leading ampersand
         parsed_ref: str = ref[1:]
 
         template_path: Path = Path(
             self._templates_dir,
-            parsed_ref + ".mako"
+            parsed_ref + ".mako",
         )
 
         async with aiofiles.open(template_path, "r") as f:
@@ -189,11 +189,11 @@ class FileNodeMaker:
     async def _make_dir_node(
         self,
         node: FileNodeInternal,
-        node_name: str
+        node_name: str,
     ) -> None:
         final_path: Path = Path(
             self._target_dir,
-            node_name
+            node_name,
         )
         # folder intended to be created shouldn't exist. Maybe it will be
         # changed later but we want more strict behaviour for now.
