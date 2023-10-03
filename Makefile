@@ -1,9 +1,10 @@
 export show=all
 export t=.
 export v
+export args
 
 test:
-	poetry run coverage run -m pytest -x --ignore=tests/app -p no:warnings --show-capture=$(show) --failed-first $(t)
+	poetry run coverage run -m pytest -x --ignore=tests/app -p no:warnings --show-capture=$(show) --failed-first $(args) $(t)
 
 lint:
 	poetry run ruff $(t)

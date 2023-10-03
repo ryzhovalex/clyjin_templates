@@ -24,6 +24,13 @@ class RootModule(Module[TemplatesArgs, Config]):
             type=str,
             help="which template group to use",
         ),
+        vars=ModuleArg[str](
+            names=["vars"],
+            type=str,
+            help=
+                "vars to be used for the template,"
+                " for example \"a=2,b='hello'\",c=true",
+        ),
         target_dir=ModuleArg[Path](
             names=["-o", "--output-dir"],
             type=Path,

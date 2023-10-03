@@ -138,13 +138,13 @@ class FileNodeMaker:
         final_vars: dict[str, TemplateGroupVarValue] = \
             self._get_final_vars(TemplateGroupVarSpecialScope.All)
 
-        MakoTemplate(raw_content).render(
+        return str(MakoTemplate(raw_content, output_encoding="utf-8").render(
             **final_vars,
-        )
-        return None
+        ))
 
     def _get_final_vars(
-        self, scope: TemplateGroupVarScope,
+        self,
+        scope: TemplateGroupVarScope,
     ) -> dict[str, TemplateGroupVarValue]:
         """
         Parses template group vars
@@ -156,10 +156,12 @@ class FileNodeMaker:
 
         vars_dump: dict[str, TemplateGroupVar | None] = \
             self._template_group.vars.model_dump()
+        final_vars: dict[str, TemplateGroupVarValue] = {}
 
         for _var_name, _var_value in vars_dump.items():
-            pass
-        return None
+            final_vars[_var_name] = _var_value
+
+        return final_vars
 
     async def _get_raw_content_string(
         self, node_content: NodeContent,
