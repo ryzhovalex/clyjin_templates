@@ -10,5 +10,4 @@ class TemplatesArgs(ModuleArgs):
 
 class AddArgs(ModuleArgs):
     template_group_dir: ModuleArg[Path]
-    template_group_name: ModuleArg[str]
     is_update: ModuleArg[bool]

@@ -60,7 +60,17 @@ class RootModule(Module[TemplatesArgs, Config]):
             template_group_name,
         )
 
-        await FileNodeMaker().make(template_group, target_dir)
+        # all mako templates are stored directly under the group's dir
+        templates_dir: Path = Path(
+            self._template_group_service.groups_dir,
+            template_group_name
+        )
+
+        await FileNodeMaker(
+            templates_dir=templates_dir,
+            template_group=template_group,
+            target_dir=target_dir
+        ).make()
 
     def _initialize(self) -> None:
         self._template_group_service = ServiceHub.ie().get(
@@ -82,13 +92,6 @@ class RegisterModule(Module[AddArgs, Config]):
             names=["template_group_dir"],
             type=Path,
             help="from which dir to add new template group",
-        ),
-        template_group_name=ModuleArg[str](
-            names=["--name"],
-            type=str,
-            help=
-                "name to assign for added template group."
-                " Dir's name is used by default.",
         ),
         is_update=ModuleArg[bool](
             names=["-u", "--update"],
@@ -112,10 +115,8 @@ class RegisterModule(Module[AddArgs, Config]):
     async def execute(self) -> None:
         self._initialize()
         input_dir: Path = self.args.template_group_dir.value
-        name: str | None = self._get_name()
         await self._template_group_service.add(
             input_dir,
-            name=name,
             is_update=self.args.is_update,
         )
 
@@ -123,9 +124,3 @@ class RegisterModule(Module[AddArgs, Config]):
         self._template_group_service = ServiceHub.ie().get(
             TemplateGroupService,
         )
-
-    def _get_name(self) -> str | None:
-        try:
-            return self.args.template_group_name.value
-        except UnsetValueError:
-            return None

@@ -10,6 +10,7 @@ from clyjin.log import Log
 from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
 from clyjin_templates.parsers import TemplateGroupSpecParser
 from clyjin_templates.utils.service import Service
+from clyjin_templates.utils.yml import load_yml
 
 if TYPE_CHECKING:
     from clyjin_templates.template.group import TemplateGroup
@@ -29,6 +30,10 @@ class TemplateGroupService(Service):
         self._is_loaded: bool = False
         self._group_by_name: dict[str, "TemplateGroup"] = {}
 
+    @property
+    def groups_dir(self) -> Path:
+        return self._groups_dir
+
     def get(self, name: str) -> "TemplateGroup":
         """
         Gets group by name.
@@ -45,23 +50,21 @@ class TemplateGroupService(Service):
         self,
         dir: Path,
         *,
-        name: str | None = None,
         is_update: bool = False,
-    ) -> None:
+    ) -> str:
         """
         Adds a new template group to the storage.
 
-        The name for template group will be taken according to the passed
-        directory's name, unless `name` is specified.
+        The name for a new template group will be fetched from the spec.yml
+        file and returned on successful add.
 
         Args:
-            template_group_dir:
+            dir:
                 Directory where a template group resides. The dir should
                 contain at least `spec.yml` file at the root level.
         """
         self._softcheck_group_dir(dir)
-        final_name: str = \
-            dir.name if name is None else name
+        final_name: str = self._get_group_name(dir)
         self._check_name_correctness(final_name)
         if not is_update:
             self._check_name_existence(final_name)
@@ -88,7 +91,13 @@ class TemplateGroupService(Service):
             dirs_exist_ok=is_update,
         )
 
+        # TODO(ryzhovalex): why do i need load here?
         await self._load(final_name)
+
+        return final_name
+
+    def _get_group_name(self, spec_dir: Path) -> str:
+        return load_yml(spec_dir)["name"]
 
     async def preload(self) -> None:
         """
