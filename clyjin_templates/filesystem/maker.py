@@ -11,21 +11,20 @@ from antievil.utils import never
 from clyjin.log import Log
 from mako.template import Template as MakoTemplate
 
-from clyjin_templates.conversion import FileNodeConversionUtils
 from clyjin_templates.filesystem.models import (
     FileNodeInternal,
     NodeContent,
     NodeType,
 )
 from clyjin_templates.template.vars import (
-    TemplateGroupVar,
+    TemplateGroupVarInternal,
     TemplateGroupVarScope,
     TemplateGroupVarSpecialScope,
     TemplateGroupVarValue,
 )
 
 if TYPE_CHECKING:
-    from clyjin_templates.template.group import TemplateGroup
+    from clyjin_templates.template.group import TemplateGroupInternal
 
 
 class FileNodeMaker:
@@ -44,11 +43,11 @@ class FileNodeMaker:
         self,
         *,
         templates_dir: Path,
-        template_group: "TemplateGroup",
+        template_group_internal: "TemplateGroupInternal",
         target_dir: Path,
     ) -> None:
         self._templates_dir: Path = templates_dir
-        self._template_group: "TemplateGroup" = template_group
+        self._template_group_internal = template_group_internal
         self._target_dir: Path = target_dir
 
     async def make(self) -> None:
@@ -58,15 +57,11 @@ class FileNodeMaker:
         """
         Log.info(
             "[clyjin_templates.filesystem] making file tree for"
-            f" template <{self._template_group.name}>"
+            f" template <{self._template_group_internal.name}>"
             f" in dir <{self._target_dir}>",
         )
-        internal_root_node: FileNodeInternal = \
-            FileNodeConversionUtils.convert_to_internal(
-                self._template_group.tree,
-            )
 
-        await self._make_subnodes(internal_root_node)
+        await self._make_subnodes(self._template_group_internal.tree)
 
     async def _make_subnodes(
         self, host_node: FileNodeInternal,
@@ -147,19 +142,20 @@ class FileNodeMaker:
         scope: TemplateGroupVarScope,
     ) -> dict[str, TemplateGroupVarValue]:
         """
-        Parses template group vars
+        Parses template group vars to get final vars to insert to the template
+        render engine.
         """
         # TODO(ryzhovalex): caching of vars per scope within the class
 
-        if not self._template_group.vars:
+        if not self._template_group_internal.vars:
             return {}
 
-        vars_dump: dict[str, TemplateGroupVar | None] = \
-            self._template_group.vars.model_dump()
+        vars_dump: dict[str, TemplateGroupVarInternal] = \
+            self._template_group_internal.vars.model_dump()
         final_vars: dict[str, TemplateGroupVarValue] = {}
 
-        for _var_name, _var_value in vars_dump.items():
-            final_vars[_var_name] = _var_value
+        for var_name, var_value in vars_dump.items():
+            final_vars[var_name] = var_value.value
 
         return final_vars
 

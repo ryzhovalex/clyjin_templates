@@ -1,6 +1,8 @@
-from contextlib import suppress
 import re
+from contextlib import suppress
+
 from antievil import EmptyInputError, LengthExpectError
+
 from clyjin_templates.utils.klass import Static
 
 TextVarValue = int | float | bool | str
@@ -61,15 +63,15 @@ class TextVarsUtils(Static):
             # and add the last element
             separated_rawvar.append(rawvar[prev_end_index:])
 
-            if len(separated_rawvar) != 2:
+            if len(separated_rawvar) != 2:  # noqa:PLR2004
                 raise LengthExpectError(
                     separated_rawvar,
                     2,
-                    len(separated_rawvar)
+                    len(separated_rawvar),
                 )
 
             mp[separated_rawvar[0]] = TextVarsUtils.convert_only_value(
-                separated_rawvar[1]
+                separated_rawvar[1],
             )
 
         return mp

@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING, Coroutine
 from antievil import DirectoryExpectError, DuplicateNameError, NotFoundError
 from clyjin.log import Log
 
-from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
 from clyjin_templates.parsers import TemplateGroupSpecParser
+from clyjin_templates.template.errors import IncorrectTemplateGroupNameError
 from clyjin_templates.utils.service import Service
 from clyjin_templates.utils.yml import load_yml
 
@@ -84,6 +84,7 @@ class TemplateGroupService(Service):
             f" from <{dir}> to <{destination_dir}>",
         )
 
+        # TODO(ryzhovalex): copy only required stuff, i.e. mako and spec.yml
         # do regular 1-to-1 copying
         shutil.copytree(
             dir,

@@ -7,12 +7,17 @@ from clyjin.base.moduledata import ModuleData
 from clyjin.log import Log
 
 from clyjin_templates.args import AddArgs, TemplatesArgs
+from clyjin_templates.conversion import TemplateGroupConversionUtils
 from clyjin_templates.filesystem.maker import FileNodeMaker
 from clyjin_templates.template.group_service import TemplateGroupService
 from clyjin_templates.utils.servicehub import ServiceHub
+from clyjin_templates.utils.textvars import TextVarsMap, TextVarsUtils
 
 if TYPE_CHECKING:
-    from clyjin_templates.template.group import TemplateGroup
+    from clyjin_templates.template.group import (
+        TemplateGroup,
+        TemplateGroupInternal,
+    )
 
 
 class RootModule(Module[TemplatesArgs, Config]):
@@ -27,6 +32,7 @@ class RootModule(Module[TemplatesArgs, Config]):
         vars=ModuleArg[str](
             names=["vars"],
             type=str,
+            default=None,
             help=
                 "vars to be used for the template,"
                 " for example \"a=2,b='hello'\",c=true",
@@ -63,20 +69,28 @@ class RootModule(Module[TemplatesArgs, Config]):
             f" group <{template_group_name}>",
         )
 
-        template_group: TemplateGroup = self._template_group_service.get(
-            template_group_name,
-        )
-
         # all mako templates are stored directly under the group's dir
         templates_dir: Path = Path(
             self._template_group_service.groups_dir,
-            template_group_name
+            template_group_name,
         )
+
+        varsmap: TextVarsMap = {}
+        if self.args.vars is not None:
+            varsmap = TextVarsUtils.convert(self.args.vars)
+        template_group: TemplateGroup = self._template_group_service.get(
+            template_group_name,
+        )
+        template_group_internal: TemplateGroupInternal = \
+            TemplateGroupConversionUtils.convert_to_internal(
+                template_group,
+                varsmap,
+            )
 
         await FileNodeMaker(
             templates_dir=templates_dir,
-            template_group=template_group,
-            target_dir=target_dir
+            template_group_internal=template_group_internal,
+            target_dir=target_dir,
         ).make()
 
     def _initialize(self) -> None:

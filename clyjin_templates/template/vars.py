@@ -15,7 +15,7 @@ class TemplateGroupVarSpecialScope(Enum):
     All = "$all"
 
 
-TemplateGroupVarValue = str | int | float | bool | list | dict
+TemplateGroupVarValue = str | int | float | bool
 TemplateGroupCustomScope = str
 TemplateGroupVarScope = \
     TemplateGroupVarSpecialScope | TemplateGroupCustomScope

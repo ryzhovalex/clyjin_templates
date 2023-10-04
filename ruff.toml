@@ -1,6 +1,6 @@
 select = ["ALL"]
 
-fix = false
+fix = true
 line-length = 79
 respect-gitignore = true
 

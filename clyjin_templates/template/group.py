@@ -1,6 +1,6 @@
 from clyjin.base import Model
-from clyjin_templates.filesystem.models import FileNode, FileNodeInternal
 
+from clyjin_templates.filesystem.models import FileNode, FileNodeInternal
 from clyjin_templates.template.template import Template
 from clyjin_templates.template.vars import (
     TemplateGroupVars,

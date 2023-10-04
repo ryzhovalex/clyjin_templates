@@ -1,5 +1,4 @@
 from clyjin_templates.filesystem.models import FileNodeInternal, NodeType
-from clyjin_templates.template.group import TemplateGroup
 
 
 def test_s1_conversion(s1_root_node_internal: FileNodeInternal):

@@ -1,4 +1,3 @@
-import re
 import pytest
 
 from clyjin_templates.utils.textvars import TextVarsMap, TextVarsUtils
@@ -15,10 +14,10 @@ from clyjin_templates.utils.textvars import TextVarsMap, TextVarsUtils
                 "co": "hello, world!",
                 "d": True,
                 "e": "true",
-                "f": "wow=!"
-            }
+                "f": "wow=!",
+            },
         ),
-    ]
+    ],
 )
 def test_convert(text: str, expected: TextVarsMap | type[Exception]):
     if isinstance(expected, dict):

@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from clyjin_templates.template.group import TemplateGroup
 from clyjin_templates.parsers import TemplateGroupSpecParser
+from clyjin_templates.template.group import TemplateGroup
 
 
 @pytest.fixture
