@@ -65,7 +65,7 @@ class TemplateGroupConversionUtils(Static):
         for var_name, var in group.vars.model_dump().items():
             result[var_name] = cls._get_internal_var(
                 var_name,
-                var,
+                TemplateGroupVar.model_validate(var),
                 var_args.get(var_name, None) if var_args is not None else None,
             )
 
@@ -89,7 +89,10 @@ class TemplateGroupConversionUtils(Static):
                 cannot_do="template vars initializing",
                 please_define=f"variable=<{var_name}>",
             )
-        elif default is None and var_arg is not None:
+        elif (
+            (default is None and var_arg is not None)
+            or (default is not None and var_arg is not None)
+        ):
             final_value = var_arg
         elif default is not None and var_arg is None:
             final_value = default
