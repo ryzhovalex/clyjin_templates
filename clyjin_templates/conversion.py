@@ -66,7 +66,7 @@ class TemplateGroupConversionUtils(Static):
             result[var_name] = cls._get_internal_var(
                 var_name,
                 TemplateGroupVar.model_validate(
-                    var
+                    var,
                 ) if var is not None else None,
                 var_args.get(var_name, None) if var_args is not None else None,
             )

@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from antievil import DirectoryExpectError, UnsetValueError
-from clyjin.base import Config, Module, ModuleArg, module
+from clyjin.base import Config, Module, ModuleArg
 from clyjin.base.moduledata import ModuleData
 from clyjin.log import Log
 

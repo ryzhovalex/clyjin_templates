@@ -18,7 +18,6 @@ from clyjin_templates.filesystem.models import (
     NodeType,
 )
 from clyjin_templates.template.vars import (
-    TemplateGroupVarInternal,
     TemplateGroupVarScope,
     TemplateGroupVarSpecialScope,
     TemplateGroupVarValue,
@@ -69,7 +68,7 @@ class FileNodeMaker:
         await self._make_subnodes(self._template_group_internal.tree, Path())
 
     async def _make_subnodes(
-        self, host_node: FileNodeInternal, prevpath: Path
+        self, host_node: FileNodeInternal, prevpath: Path,
     ) -> None:
         subnodes: dict[str, FileNodeInternal] | None = \
             host_node.nodes
@@ -107,10 +106,10 @@ class FileNodeMaker:
         final_path: Path = Path(
             self._target_dir,
             Path(str(MakoTemplate(str(prevpath)).render(
-                **self._final_vars
+                **self._final_vars,
             ))),
             str(MakoTemplate(node_name).render(
-                **self._final_vars
+                **self._final_vars,
             )),
         )
 
@@ -126,7 +125,7 @@ class FileNodeMaker:
 
     async def _get_final_content(
         self,
-        node_content: NodeContent | None
+        node_content: NodeContent | None,
     ) -> str:
         """
         Transform whatever is in node content into final writeable string.
@@ -211,7 +210,7 @@ class FileNodeMaker:
         final_path: Path = Path(
             self._target_dir,
             str(MakoTemplate(node_name).render(
-                **self._final_vars
+                **self._final_vars,
             )),
         )
         # folder intended to be created shouldn't exist. Maybe it will be

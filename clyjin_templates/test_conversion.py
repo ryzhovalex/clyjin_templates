@@ -1,7 +1,16 @@
 from clyjin_templates.conversion import TemplateGroupConversionUtils
-from clyjin_templates.filesystem.models import FileNode, FileNodeInternal, NodeType
-from clyjin_templates.template.group import TemplateGroup, TemplateGroupInternal
-from clyjin_templates.template.vars import TemplateGroupVarInternal, TemplateGroupVarsInternal
+from clyjin_templates.filesystem.models import (
+    FileNodeInternal,
+    NodeType,
+)
+from clyjin_templates.template.group import (
+    TemplateGroup,
+    TemplateGroupInternal,
+)
+from clyjin_templates.template.vars import (
+    TemplateGroupVarInternal,
+    TemplateGroupVarsInternal,
+)
 
 
 def test_convert():
@@ -9,32 +18,32 @@ def test_convert():
         "name": "test",
         "tree": {
             "main.py": {
-                "$content": "print(${a})"
+                "$content": "print(${a})",
             },
             "service.py": {
-                "$content": "&service.py"
+                "$content": "&service.py",
             },
             "readme": {
-                "$content": "hello!"
-            }
+                "$content": "hello!",
+            },
         },
         "templates": {
-            "service.py": None
+            "service.py": None,
         },
         "description": "Test template!",
         "vars": {
             "a": {
-                "default": 1
-            }
-        }
+                "default": 1,
+            },
+        },
     })
 
     internal: TemplateGroupInternal = \
         TemplateGroupConversionUtils.convert_to_internal(
             group,
             {
-                "a": 5
-            }
+                "a": 5,
+            },
         )
 
     expected: TemplateGroupInternal = TemplateGroupInternal(
@@ -44,30 +53,30 @@ def test_convert():
             nodes={
                 "main.py": FileNodeInternal(
                     type=NodeType.File,
-                    content="print(${a})"
+                    content="print(${a})",
                 ),
                 "service.py": FileNodeInternal(
                     type=NodeType.File,
-                    content="&service.py"
+                    content="&service.py",
                 ),
                 "readme": FileNodeInternal(
                     type=NodeType.File,
-                    content="hello!"
+                    content="hello!",
                 ),
-            }
+            },
         ),
         templates={
-            "service.py": None
+            "service.py": None,
         },
         description="Test template!",
         vars=TemplateGroupVarsInternal(
             root={
                 "a": TemplateGroupVarInternal(
                     default=1,
-                    value=5
-                )
-            }
-        )
+                    value=5,
+                ),
+            },
+        ),
     )
 
     assert internal == expected

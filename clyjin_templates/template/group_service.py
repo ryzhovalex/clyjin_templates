@@ -99,7 +99,7 @@ class TemplateGroupService(Service):
     def _get_group_name(self, spec_dir: Path) -> str:
         return load_yml(Path(
             spec_dir,
-            "spec.yml"
+            "spec.yml",
         ))["name"]
 
     async def preload(self) -> None:
