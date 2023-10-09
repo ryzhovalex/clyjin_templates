@@ -1,0 +1,15 @@
+name: s2
+description: s2 description
+vars:
+  name:
+  namespace:
+    default: "Default"
+templates:
+  ecs-component.cs:
+  ecs-system.cs:
+tree:
+  ${name}:
+    ${name}Component.cs:
+      $content: "&ecs-component.cs"
+    ${name}System.cs:
+      $content: "&ecs-system.cs"

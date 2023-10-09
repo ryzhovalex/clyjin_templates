@@ -51,6 +51,10 @@ class FileNodeMaker:
         self._template_group_internal = template_group_internal
         self._target_dir: Path = target_dir
 
+        # TODO(ryzhovalex): temporarily All scope is used
+        self._final_vars: dict[str, TemplateGroupVarValue] = \
+            self._get_final_vars(TemplateGroupVarSpecialScope.All)
+
     async def make(self) -> None:
         """
         Executes template group saving according files and directories to
@@ -102,8 +106,12 @@ class FileNodeMaker:
     ) -> None:
         final_path: Path = Path(
             self._target_dir,
-            prevpath,
-            node_name,
+            Path(str(MakoTemplate(str(prevpath)).render(
+                **self._final_vars
+            ))),
+            str(MakoTemplate(node_name).render(
+                **self._final_vars
+            )),
         )
 
         # to avoid unexpected overwriting, file shouldn't exist
@@ -118,7 +126,7 @@ class FileNodeMaker:
 
     async def _get_final_content(
         self,
-        node_content: NodeContent | None,
+        node_content: NodeContent | None
     ) -> str:
         """
         Transform whatever is in node content into final writeable string.
@@ -133,12 +141,8 @@ class FileNodeMaker:
 
         raw_content: str = await self._get_raw_content_string(node_content)
 
-        # TODO(ryzhovalex): temporarily All scope is used
-        final_vars: dict[str, TemplateGroupVarValue] = \
-            self._get_final_vars(TemplateGroupVarSpecialScope.All)
-
         return str(MakoTemplate(raw_content).render(
-            **final_vars,
+            **self._final_vars,
         ))
 
     def _get_final_vars(
@@ -206,7 +210,9 @@ class FileNodeMaker:
     ) -> None:
         final_path: Path = Path(
             self._target_dir,
-            node_name,
+            str(MakoTemplate(node_name).render(
+                **self._final_vars
+            )),
         )
         # folder intended to be created shouldn't exist. Maybe it will be
         # changed later but we want more strict behaviour for now.
