@@ -105,9 +105,9 @@ class RootModule(Module[TemplatesArgs, Config]):
             return self._rootdir
 
 
-class RegisterModule(Module[AddArgs, Config]):
-    Name = "register"
-    Description = "registers a new template"
+class AddModule(Module[AddArgs, Config]):
+    Name = "add"
+    Description = "adds a new template"
     Args = AddArgs(
         template_group_dir=ModuleArg[Path](
             names=["template_group_dir"],

@@ -3,7 +3,7 @@ import importlib.metadata
 from clyjin.base import Plugin, PluginInitializeData
 
 from clyjin_templates.boot import Boot
-from clyjin_templates.modules import RegisterModule, RootModule
+from clyjin_templates.modules import AddModule, RootModule
 from clyjin_templates.template.group_service import TemplateGroupService
 from clyjin_templates.utils.servicehub import ServiceHub
 
@@ -12,7 +12,7 @@ class TemplatesPlugin(Plugin):
     Name = "templates"
     ModuleClasses = [
         RootModule,
-        RegisterModule,
+        AddModule,
     ]
     Version = importlib.metadata.version("clyjin_templates")
 

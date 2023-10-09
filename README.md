@@ -104,14 +104,14 @@ a direct string (simply written in `spec.yml` file), absolute or relative
 template. In our example latter is used in form of
 `$content: "&template_1.py"`.
 
-### Register a template group
+### Add a template group
 
 In order to make your template group available in the CLI, you need to register
 it:
 ```sh
-clyjin templates.register
+clyjin templates.add
 # or
-clyjin templates.register path/to/working/directory
+clyjin templates.add path/to/working/directory
 ```
 
 Which will automatically search for `spec.yml` in the working directory and
