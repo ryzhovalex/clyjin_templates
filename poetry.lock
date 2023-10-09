@@ -35,13 +35,13 @@ files = [
 
 [[package]]
 name = "clyjin"
-version = "0.2.11"
+version = "0.2.12"
 description = "Core for building plugins with CLI interfaces"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "clyjin-0.2.11-py3-none-any.whl", hash = "sha256:3cacffe8128d1db169ce1f949ca15d8e3b56e3e9b4194977c780c16c3f5bc632"},
-    {file = "clyjin-0.2.11.tar.gz", hash = "sha256:58759c0977040cfa930c72d0ce9f07719639bce3c2d806e6347845c01e002a98"},
+    {file = "clyjin-0.2.12-py3-none-any.whl", hash = "sha256:6496026a47864f5b24d226f0b346ed6025f1f981d4e5cfb6f6c6393f14824470"},
+    {file = "clyjin-0.2.12.tar.gz", hash = "sha256:9f79775644594d11f428e9e1ad6cdd718deb989d839d43be16c7276e4bbc80a8"},
 ]
 
 [package.dependencies]
@@ -554,4 +554,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6fbae3e2e581f93d998f730f8de2271997dc8755b1002cbd80d42c594088110c"
+content-hash = "87ce1973676b1ddf06e82848f6daeda0070c587e5c8bd8211e54e21502adf031"

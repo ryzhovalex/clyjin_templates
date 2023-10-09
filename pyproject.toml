@@ -8,7 +8,7 @@ packages = [{include = "clyjin_templates"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-clyjin = "^0.2.11"
+clyjin = "^0.2.12"
 mako = "^1.2.4"
 pyyaml = "^6.0.1"
 aiofiles = "^23.2.1"

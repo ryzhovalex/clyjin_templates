@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 
 class RootModule(Module[TemplatesArgs, Config]):
-    Name = "_root"
+    Name = "$root"
     Description = "creates files and directories using template group"
     Args = TemplatesArgs(
         template_group=ModuleArg[str](
