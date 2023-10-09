@@ -97,7 +97,10 @@ class TemplateGroupService(Service):
         return final_name
 
     def _get_group_name(self, spec_dir: Path) -> str:
-        return load_yml(spec_dir)["name"]
+        return load_yml(Path(
+            spec_dir,
+            "spec.yml"
+        ))["name"]
 
     async def preload(self) -> None:
         """
@@ -106,9 +109,12 @@ class TemplateGroupService(Service):
         loading_coros: list[Coroutine[None, None, None]] = []
 
         for _, dirnames, _ in os.walk(self._groups_dir):
-            loading_coros = [self._load(dirname) for dirname in dirnames]
+            loading_coros.extend([self._load(dirname) for dirname in dirnames])
 
-        await asyncio.gather(*loading_coros)
+        if len(loading_coros) > 0:
+            await asyncio.gather(*loading_coros)
+        else:
+            Log.warning("[clyjin_templates] nothing to preload")
 
     async def _load(self, name: str) -> None:
         """

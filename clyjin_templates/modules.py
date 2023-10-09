@@ -1,8 +1,9 @@
+from contextlib import suppress
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from antievil import DirectoryExpectError, UnsetValueError
-from clyjin.base import Config, Module, ModuleArg
+from clyjin.base import Config, Module, ModuleArg, module
 from clyjin.base.moduledata import ModuleData
 from clyjin.log import Log
 
@@ -21,7 +22,7 @@ if TYPE_CHECKING:
 
 
 class RootModule(Module[TemplatesArgs, Config]):
-    Name = "$root"
+    Name = "_root"
     Description = "creates files and directories using template group"
     Args = TemplatesArgs(
         template_group=ModuleArg[str](
@@ -32,10 +33,11 @@ class RootModule(Module[TemplatesArgs, Config]):
         vars=ModuleArg[str](
             names=["vars"],
             type=str,
+            nargs="?",
             default=None,
             help=
                 "vars to be used for the template,"
-                " for example \"a=2,b='hello'\",c=true",
+                " for example `a=2,b=\"hello\",c=true`",
         ),
         target_dir=ModuleArg[Path](
             names=["-o", "--output-dir"],
@@ -76,8 +78,9 @@ class RootModule(Module[TemplatesArgs, Config]):
         )
 
         varsmap: TextVarsMap = {}
-        if self.args.vars is not None:
-            varsmap = TextVarsUtils.convert(self.args.vars)
+        with suppress(UnsetValueError):
+            varsmap = TextVarsUtils.convert(self.args.vars.value)
+
         template_group: TemplateGroup = self._template_group_service.get(
             template_group_name,
         )
@@ -112,6 +115,8 @@ class AddModule(Module[AddArgs, Config]):
         template_group_dir=ModuleArg[Path](
             names=["template_group_dir"],
             type=Path,
+            nargs="?",
+            default=".",
             help="from which dir to add new template group",
         ),
         is_update=ModuleArg[bool](

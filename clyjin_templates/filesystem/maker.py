@@ -1,6 +1,7 @@
 import asyncio
+from contextlib import suppress
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import aiofiles
 from antievil import (
@@ -61,32 +62,33 @@ class FileNodeMaker:
             f" in dir <{self._target_dir}>",
         )
 
-        await self._make_subnodes(self._template_group_internal.tree)
+        await self._make_subnodes(self._template_group_internal.tree, Path())
 
     async def _make_subnodes(
-        self, host_node: FileNodeInternal,
+        self, host_node: FileNodeInternal, prevpath: Path
     ) -> None:
         subnodes: dict[str, FileNodeInternal] | None = \
             host_node.nodes
         if subnodes is None:
             raise UnsetValueError(
-                explanation="cannot initialize root node subnodes",
+                explanation="cannot initialize subnodes",
             )
 
         await asyncio.gather(*[
             self._make_node(
-                node, node_name,
+                node, prevpath, node_name,
             ) for node_name, node in subnodes.items()
         ])
 
     async def _make_node(
         self,
         node: FileNodeInternal,
+        prevpath: Path,
         node_name: str,
     ) -> None:
         match node.type:
             case NodeType.File:
-                await self._make_file_node(node, node_name)
+                await self._make_file_node(node, prevpath, node_name)
             case NodeType.Dir:
                 await self._make_dir_node(node, node_name)
             case _:
@@ -95,10 +97,12 @@ class FileNodeMaker:
     async def _make_file_node(
         self,
         node: FileNodeInternal,
+        prevpath: Path,
         node_name: str,
     ) -> None:
         final_path: Path = Path(
             self._target_dir,
+            prevpath,
             node_name,
         )
 
@@ -133,7 +137,7 @@ class FileNodeMaker:
         final_vars: dict[str, TemplateGroupVarValue] = \
             self._get_final_vars(TemplateGroupVarSpecialScope.All)
 
-        return str(MakoTemplate(raw_content, output_encoding="utf-8").render(
+        return str(MakoTemplate(raw_content).render(
             **final_vars,
         ))
 
@@ -150,12 +154,12 @@ class FileNodeMaker:
         if not self._template_group_internal.vars:
             return {}
 
-        vars_dump: dict[str, TemplateGroupVarInternal] = \
+        vars_dump: dict[str, dict[str, Any]] = \
             self._template_group_internal.vars.model_dump()
         final_vars: dict[str, TemplateGroupVarValue] = {}
 
         for var_name, var_value in vars_dump.items():
-            final_vars[var_name] = var_value.value
+            final_vars[var_name] = var_value["value"]
 
         return final_vars
 
@@ -208,4 +212,6 @@ class FileNodeMaker:
         # changed later but we want more strict behaviour for now.
         final_path.mkdir(parents=False, exist_ok=False)
 
-        await self._make_subnodes(node)
+        with suppress(UnsetValueError):
+            # set prevpath to be from this directory
+            await self._make_subnodes(node, final_path)
