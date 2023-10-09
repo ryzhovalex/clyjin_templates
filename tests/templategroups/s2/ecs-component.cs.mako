@@ -7,7 +7,7 @@ namespace ${namespace}
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-    public sealed class ${name}Component : MonoProvider<${name}>
+    public sealed class ${name}Component: MonoProvider<${name}>
     {
     }
 
@@ -15,7 +15,7 @@ namespace ${namespace}
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-    public struct ${name} : IComponent
+    public struct ${name}: IComponent
     {
     }
 }
