@@ -85,7 +85,6 @@ class TemplateGroupService(Service):
         )
 
         # TODO(ryzhovalex): copy only required stuff, i.e. mako and spec.yml
-        # do regular 1-to-1 copying
         shutil.copytree(
             dir,
             destination_dir,
