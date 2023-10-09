@@ -1,6 +1,7 @@
 from clyjin_templates.conversion import TemplateGroupConversionUtils
-from clyjin_templates.filesystem.models import FileNode
+from clyjin_templates.filesystem.models import FileNode, FileNodeInternal, NodeType
 from clyjin_templates.template.group import TemplateGroup, TemplateGroupInternal
+from clyjin_templates.template.vars import TemplateGroupVarInternal, TemplateGroupVarsInternal
 
 
 def test_convert():
@@ -36,5 +37,37 @@ def test_convert():
             }
         )
 
-    print(internal)
-    assert 0
+    expected: TemplateGroupInternal = TemplateGroupInternal(
+        name="test",
+        tree=FileNodeInternal(
+            type=NodeType.Dir,
+            nodes={
+                "main.py": FileNodeInternal(
+                    type=NodeType.File,
+                    content="print(${a})"
+                ),
+                "service.py": FileNodeInternal(
+                    type=NodeType.File,
+                    content="&service.py"
+                ),
+                "readme": FileNodeInternal(
+                    type=NodeType.File,
+                    content="hello!"
+                ),
+            }
+        ),
+        templates={
+            "service.py": None
+        },
+        description="Test template!",
+        vars=TemplateGroupVarsInternal(
+            root={
+                "a": TemplateGroupVarInternal(
+                    default=1,
+                    value=5
+                )
+            }
+        )
+    )
+
+    assert internal == expected
